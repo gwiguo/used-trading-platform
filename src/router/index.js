@@ -11,6 +11,11 @@ const routes = [
             title: '登录',
         },
         component: () => import(/* webpackChunkName: "login" */ '../views/login.vue'),
+    },
+    {
+        path: '/Home',
+        name: 'Home',
+        component: () => import(/* webpackChunkName: "login" */ '../views/home.vue'),
     }
 ];
 
