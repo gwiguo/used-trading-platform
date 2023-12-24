@@ -1,10 +1,10 @@
 <template>
 	<el-form label-width="60px" :rules="rules" :model="account">
 		<el-form-item label="账号" prop="name">
-			<el-input v-model="account.name" size="large"></el-input>
+			<el-input v-model="account.name"></el-input>
 		</el-form-item>
 		<el-form-item label="密码" prop="password">
-			<el-input v-model="account.password" size="large"></el-input>
+			<el-input v-model="account.password"></el-input>
 		</el-form-item>
 	</el-form>
 </template>
