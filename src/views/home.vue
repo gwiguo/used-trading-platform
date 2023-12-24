@@ -169,7 +169,7 @@ const tabVal = ref("全部");
 
 onMounted(() => {
 	request({
-		url: "http://localhost:3000/queryUser",
+		url: "http://localhost:3000/getUser",
 		method: "post"
 	}).then(res => {
 		console.log(res);

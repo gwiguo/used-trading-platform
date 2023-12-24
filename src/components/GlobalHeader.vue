@@ -16,24 +16,49 @@
 			</div>
 		</div>
 	</header>
-	<el-dialog v-model="dialogVisible" width="500px" :before-close="handleClose" align-center>
-		<div class="login">
-			<div class="login-container">
-				<el-form label-width="60px" :rules="rules" :model="account">
-					<el-form-item label="账号" prop="name">
-						<el-input v-model="account.name"></el-input>
-					</el-form-item>
-					<el-form-item label="密码" prop="password">
-						<el-input v-model="account.password" show-password></el-input>
-					</el-form-item>
-				</el-form>
-				<!-- <div class="remember-password">
-					<el-checkbox label="记住密码" name="remember" />
-					<el-button type="primary" link>忘记密码</el-button>
-				</div> -->
-				<div class="btn-list">
-					<el-button class="sign-in" type="primary" size="large">登录</el-button>
-					<el-button class="sign-up" size="large">注册</el-button>
+	<el-dialog
+		v-model="dialogVisible"
+		:before-close="handleClose"
+		align-center
+		class="login-dialog"
+		:close-icon="CloseBold"
+	>
+		<div class="dialog-body">
+			<div class="banner">
+				<img src="../assets/images/login_banner.png" />
+			</div>
+			<div class="login">
+				<div class="login-container">
+					<h1>登录</h1>
+					<el-form :rules="rules" :model="account">
+						<el-form-item prop="name">
+							<el-input
+								v-model="account.name"
+								:prefix-icon="User"
+								placeholder="请输入账号"
+								class="input-account"
+								size="large"
+							></el-input>
+						</el-form-item>
+						<el-form-item prop="password">
+							<el-input
+								v-model="account.password"
+								show-password
+								:prefix-icon="Lock"
+								placeholder="请输入密码"
+								class="input-password"
+								size="large"
+							></el-input>
+						</el-form-item>
+					</el-form>
+					<!-- <div class="remember-password">
+						<el-checkbox label="记住密码" name="remember" />
+						<el-button type="primary" link>忘记密码</el-button>
+					</div> -->
+					<div class="btn-list">
+						<el-button class="sign-in" type="primary" size="large">登录</el-button>
+						<el-button class="sign-up" size="large">注册</el-button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -43,7 +68,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { ElMessage, ElNotification } from "element-plus";
-import { Search, Plus, ChatDotSquare, UserFilled, Iphone } from "@element-plus/icons-vue";
+import { Search, Plus, ChatDotSquare, CloseBold, User, Lock } from "@element-plus/icons-vue";
 // import SignInDialog from "./SignInDialog.vue";
 
 const account = reactive({
@@ -152,26 +177,25 @@ const handleClick = () => {
 	}
 }
 // 登录/注册弹窗
-
 .login {
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	.login-container {
-		width: 400px;
+		width: 300px;
+		margin-left: 60px;
 		h1 {
 			text-align: center;
-			color: #fff;
+			color: #000;
+			margin-top: 0;
+			margin-bottom: 60px;
 		}
 		.el-form {
 			margin-bottom: 30px;
 		}
 		.remember-password {
 			text-align: right;
-			// display: flex;
-			// justify-content: space-between;
-			// align-items: center;
 			padding: 0 10px;
 			height: 3em;
 			background-color: #fff;
@@ -185,14 +209,40 @@ const handleClick = () => {
 			.el-button {
 				padding-left: 40px;
 				padding-right: 40px;
-			}
-			.sign-in {
-				// width: 100%;
+				font-size: 14px;
+				border-radius: 50px;
 			}
 			.sign-up {
 				margin-left: 20px;
 			}
 		}
+	}
+}
+.login-dialog {
+	.dialog-body {
+		display: flex;
+		align-items: center;
+		.banner img {
+			width: 500px;
+			height: 500px;
+			object-fit: contain;
+		}
+	}
+}
+</style>
+<style lang="less">
+.login-dialog {
+	width: 950px !important;
+	border-radius: 10px !important;
+	.el-dialog__header {
+		padding: 0;
+	}
+	.el-dialog__body {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	.el-dialog__headerbtn {
+		font-size: 24px;
 	}
 }
 </style>
