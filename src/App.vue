@@ -11,7 +11,12 @@ import GlobalHeader from "./components/GlobalHeader.vue";
 
 <style lang="less" scoped>
 .main {
+	overflow: hidden;
 	margin: 0 auto;
+	margin-top: 20px;
 	width: 1400px;
+	height: 977px;
+	// height: calc(100vh - 100px);
+	background-color: #fff;
 }
 </style>
