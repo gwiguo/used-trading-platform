@@ -20,6 +20,7 @@ const upload = require("./api/upload/upload.js")
 // 个人中心
 const getPersonal = require("./api/personal/getPersonal.js");
 const collect = require("./api/personal/collect.js");
+const getMyGoods = require("./api/personal/getMyGoods.js");
 
 // 订单
 const getOrderInfo = require("./api/order/getOrderInfo.js");
@@ -49,6 +50,7 @@ router.post("/insertComment", insertComment);
 router.get("/getPersonal", getPersonal);
 router.post("/collect", collect);
 router.get("/getOrderInfo", getOrderInfo);
+router.get("/getMyGoods", getMyGoods);
 router.post("/createOrder", createOrder);
 
 router.post("/upload", upload.single("file"), (req, res) => {
