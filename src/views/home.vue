@@ -35,7 +35,7 @@
 						</div>
 						<p class="time">{{ item.publish_time }}</p>
 						<div class="user-wrap">
-							<el-avatar shape="square" :size="30" :src="item.user_avatar" />
+							<el-avatar shape="square" :size="25" :src="item.user_avatar" />
 							<span class="user-name">{{ item.publish_user }}</span>
 						</div>
 					</div>
@@ -110,7 +110,7 @@ const handleCurrentChange = n => {
 
 <style lang="less" scoped>
 .wrap {
-	height: calc(100% - 2px);
+	// height: calc(100% - 2px);
 	:deep(.el-tabs__header) {
 		user-select: none;
 	}
@@ -146,8 +146,8 @@ const handleCurrentChange = n => {
 	}
 
 	.content {
-		padding: 30px;
-		min-height: 800px;
+		padding: 20px;
+		// min-height: 800px;
 		background-color: #fff;
 		.item-list {
 			display: flex;
@@ -155,7 +155,7 @@ const handleCurrentChange = n => {
 			flex-wrap: wrap;
 			justify-content: flex-start;
 			margin-bottom: 40px;
-			min-height: 800px;
+			// min-height: 800px;
 			.item:nth-child(n + 6) {
 				margin-top: 30px;
 			}
@@ -166,21 +166,19 @@ const handleCurrentChange = n => {
 			.item {
 				// box-sizing: border-box;
 				margin-right: 40px;
-				width: 233px;
-				height: 385px;
+				width: 200px;
+				// height: 385px;
 				border: 1px solid #e9e9eb;
 				cursor: pointer;
 				.el-image {
-					width: 233px;
-					height: 200px;
+					width: 180px;
+					height: 180px;
 					.image-slot {
 						display: flex;
 						justify-content: center;
 						align-items: center;
 						width: 100%;
 						height: 100%;
-						background: var(--el-fill-color-light);
-						color: var(--el-text-color-secondary);
 						font-size: 14px;
 					}
 				}
@@ -190,10 +188,10 @@ const handleCurrentChange = n => {
 					padding: 10px;
 					.title {
 						width: 100%;
-						height: 52px;
+						// height: 52px;
 						display: -webkit-box;
 						word-break: break-all;
-						font-size: 20px;
+						font-size: 16px;
 						font-weight: bold;
 						overflow: hidden;
 						text-overflow: ellipsis;
@@ -203,7 +201,7 @@ const handleCurrentChange = n => {
 					.text {
 						display: flex;
 						justify-content: space-between;
-						margin: 10px 0;
+						margin: 5px 0;
 						.price {
 							color: red;
 							font-size: 20px;
@@ -217,7 +215,7 @@ const handleCurrentChange = n => {
 						}
 					}
 					.time {
-						margin-bottom: 10px;
+						margin-bottom: 5px;
 						color: #909399;
 					}
 					.user-wrap {
@@ -226,6 +224,7 @@ const handleCurrentChange = n => {
 						.user-name {
 							margin-left: 10px;
 							color: #73767a;
+							font-size: 14px;
 						}
 					}
 				}

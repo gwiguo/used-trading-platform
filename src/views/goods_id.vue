@@ -134,6 +134,12 @@ const getCommentList = () => {
 };
 
 const handleClickWantToBy = () => {
+	if (!userInfo.value.account) {
+			ElMessage({
+				type: "error",
+				message: "请先登录！"
+			});		
+	} else {
 	request({
 		url: "/order_api/createOrder",
 		method: "post",
@@ -165,9 +171,17 @@ const handleClickWantToBy = () => {
 			});
 		}
 	});
+
+	}
 };
 
 const collectOperate = () => {
+	if (!userInfo.value.account) {
+		ElMessage({
+			type: "error",
+			message: "请先登录！"
+		});		
+	} else {
 	collectLoading.value = true;
 	request({
 		url: "/personal/collect",
@@ -203,6 +217,8 @@ const collectOperate = () => {
 			});
 		}
 	});
+
+	}
 };
 
 const collectLoading = ref(false);
@@ -295,6 +311,7 @@ const sendCmt = () => {
 		min-height: 50%;
 		h1 {
 			margin-top: 0;
+			font-size: 24px;
 		}
 		.el-image {
 			margin: 10px 0;

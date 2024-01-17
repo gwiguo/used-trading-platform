@@ -135,6 +135,7 @@ const getOrderInfo = () => {
 }
 .order-container {
 	padding: 40px;
+	padding-bottom: 20px;
 	line-height: 48px;
 	.order-title {
 		font-size: 24px;

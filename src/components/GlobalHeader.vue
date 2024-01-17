@@ -17,7 +17,7 @@
 					</div>
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item :icon="User">个人中心</el-dropdown-item>
+							<el-dropdown-item :icon="User" @click="toMy">个人中心</el-dropdown-item>
 							<el-dropdown-item :icon="SwitchButton" @click="handleLogOut">退出登录</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
@@ -182,6 +182,10 @@ const toPublishPage = () => {
 	}
 };
 
+const toMy = () => {
+	router.push("/my")
+}
+
 const dialogVisible = ref(false);
 const handleClose = done => {
 	dialogVisible.value = false;
@@ -332,7 +336,7 @@ const handleClick = () => {
 		align-items: center;
 		padding: 10px 0;
 		margin: 0 auto;
-		width: 1400px;
+		width: 1200px;
 	}
 	h1 {
 		flex: 0 0 auto;
