@@ -366,6 +366,7 @@ const handleClick = () => {
 		display: flex;
 		margin-left: 65px;
 		user-select: none;
+		cursor: pointer;
 		.user-name {
 			width: 100px;
 			text-align: right;

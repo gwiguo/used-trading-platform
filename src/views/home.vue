@@ -110,7 +110,8 @@ const handleCurrentChange = n => {
 
 <style lang="less" scoped>
 .wrap {
-	// height: calc(100% - 2px);
+	height: calc(100% - 2px);
+	// height: 100%;
 	:deep(.el-tabs__header) {
 		user-select: none;
 	}

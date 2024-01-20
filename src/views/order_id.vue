@@ -2,7 +2,7 @@
 	<div class="top-container">
 		<el-image class="goods-img" v-if="data?.goods_cover?.length" :src="data?.goods_cover" fit="cover" />
 		<div class="info">
-			{{ data.category || "买到的" }}：
+			{{ data.category == 'bought' ? "买到的" : data.category == 'sold' ? "卖出的" : "" }}：
 			{{ data.goods_title }}
 			<span class="price">￥{{ data.goods_price }}</span>
 		</div>
@@ -16,13 +16,15 @@
 	<div class="order-container">
 		<div class="order-title">订单信息（{{ data.order_status }}）：</div>
 		<div class="order-id">编号：{{ data._id }}</div>
-		<div class="pay-status">支付状态：{{ data.pay_status }}</div>
+		<div class="pay-status">支付状态：  
+			<el-tag class="ml-2" :type="data.pay_status == '未支付'? 'danger':'success'">{{ data.pay_status }}</el-tag>
+</div>
 		<div class="pay-way">支付方式：{{ data.pay_way }}</div>
 		<div class="create-time">创建时间：{{ data.create_time }}</div>
 		<div class="pay-time">支付时间：{{ data.pay_time }}</div>
 		<div class="btn-group">
 			<el-button type="danger" plain>取消订单</el-button>
-			<el-button type="primary" plain>立即支付</el-button>
+			<el-button type="primary" plain @click="handleClickPay" v-if="data.pay_status == '未支付'">立即支付</el-button>
 		</div>
 	</div>
 </template>
@@ -32,6 +34,8 @@ import request from "@/utils/request.js";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMain } from "@/store/index.js";
+
+import { formaDate } from "@/utils/utils.js";
 
 const useStore = useMain();
 const { userInfo, personal } = storeToRefs(useStore);
@@ -85,8 +89,7 @@ const getOrderInfo = () => {
 			url: "/order_api/getOrderInfo",
 			params: {
 				_id: route.params.id,
-				user_id: userInfo.value._id,
-				category: "买到的"
+				user_id: userInfo.value._id
 			}
 		})
 			.then(res => {
@@ -101,6 +104,51 @@ const getOrderInfo = () => {
 			});
 	});
 };
+
+const handleClickPay = () => {	
+	proxy
+		.$confirm("模拟支付宝支付，是否确认支付?", "支付订单",{
+			confirmButtonText: "支付",
+			cancelButtonText: "取消",
+			type: "warning"
+		})
+		.then(() => {
+			pay()
+		})
+		.catch(() => {});
+}
+
+const pay = () => {
+	request({
+			url: "/order_api/payOrder",
+			method:"post",
+			data: {
+				_id: route.params.id,
+				pay_status:"已支付",
+				pay_way:'支付宝',
+				order_status:'待发货',
+				pay_time: formaDate(new Date())
+			}
+		})
+			.then(res => {
+				if (res.code == 200) {
+					ElMessage({
+						type: "success",
+						message: "支付成功！"
+					});
+					getOrderInfo()
+				}else{
+					ElMessage({
+						type: "error",
+						message: "支付失败~"
+					});
+				}
+			})
+			.finally(() => {
+
+			});
+}
+
 </script>
 
 <style lang="less" scoped>

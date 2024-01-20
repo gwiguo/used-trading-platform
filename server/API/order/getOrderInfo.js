@@ -2,15 +2,14 @@ const { __connectDB } = require("../../db/mongo.js");
 const { ObjectId } = require("mongodb")
 
 module.exports = async (req, res) => {
-    const { _id, user_id, category } = req.query;
+    const { _id, user_id } = req.query;
 
     if (!_id) return res.send({
         code: -1
     });
     const where = {
         _id: new ObjectId(_id),
-        user_id,
-        category
+        user_id
     };
 
     __connectDB(async (db, client) => {

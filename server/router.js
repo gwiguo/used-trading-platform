@@ -25,6 +25,9 @@ const getMyGoods = require("./api/personal/getMyGoods.js");
 // 订单
 const getOrderInfo = require("./api/order/getOrderInfo.js");
 const createOrder = require("./api/order/createOrder.js");
+const payOrder = require("./api/order/payOrder.js");
+
+
 
 
 router.get("*", (req, res, next) => {
@@ -50,6 +53,7 @@ router.post("/insertComment", insertComment);
 router.get("/getPersonal", getPersonal);
 router.post("/collect", collect);
 router.get("/getOrderInfo", getOrderInfo);
+router.post("/payOrder", payOrder);
 router.get("/getMyGoods", getMyGoods);
 router.post("/createOrder", createOrder);
 
