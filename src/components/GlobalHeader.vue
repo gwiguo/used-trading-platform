@@ -183,8 +183,8 @@ const toPublishPage = () => {
 };
 
 const toMy = () => {
-	router.push("/my")
-}
+	router.push("/my");
+};
 
 const dialogVisible = ref(false);
 const handleClose = done => {
@@ -225,6 +225,7 @@ const handleClickLogin = () => {
 						type: "error",
 						message: "账号或密码错误！"
 					});
+					loading.value = false;
 				}
 			});
 		} else {
