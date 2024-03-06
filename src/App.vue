@@ -16,7 +16,7 @@ import GlobalHeader from "./components/GlobalHeader.vue";
 	margin-top: 20px;
 	width: 1215px;
 	// height: 977px;
-	// height: calc(100vh - 100px);
+	height: calc(100vh - 110px);
 	background-color: #fff;
 }
 </style>

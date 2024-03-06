@@ -11,17 +11,123 @@ templat<template>
 	</div>
 	<div class="block"></div>
 	<div class="content">
-  <el-tabs v-model="activeName"  @tab-click="handleClick">
-    <el-tab-pane label="我发布的" name="publish">我发布的</el-tab-pane>
-    <el-tab-pane label="我下架的" name="offshelf">我下架的</el-tab-pane>
-    <el-tab-pane label="我收藏的" name="collect">我收藏的</el-tab-pane>
-    <el-tab-pane label="我卖出的" name="sell">我卖出的</el-tab-pane>
-    <el-tab-pane label="我买到的" name="buy">我买到的</el-tab-pane>
-  </el-tabs>
+	<el-tabs v-model="activeName"  @tab-click="handleClickTab">
+		<el-tab-pane label="我发布的" name="published">
+			<div class="item-list">
+				<div class="item" v-for="item in data.published" :key="item._id">
+					<el-image :src="item.goods_cover" fit="cover">
+						<template #placeholder>
+							<div class="image-slot">
+								<el-icon size="36"><Loading /></el-icon>
+							</div>
+						</template>
+					</el-image>
+					<div class="info">
+						<p class="goods-title">{{ item.goods_title }}</p>
+						<div class="goods-desc">{{ item.goods_desc }}</div>
+						<p class="create-time">{{ item.create_time }}</p>
+						<p class="price">￥{{ item.goods_price }}</p>
+					</div>
+					<div class="btn">
+						
+					</div>
+				</div>
+			</div></el-tab-pane>
+		<el-tab-pane label="我下架的" name="removed">
+			<div class="item-list">
+				<div class="item" v-for="item in data.removed" :key="item._id">
+					<el-image :src="item.goods_cover" fit="cover">
+						<template #placeholder>
+							<div class="image-slot">
+								<el-icon size="36"><Loading /></el-icon>
+							</div>
+						</template>
+					</el-image>
+					<div class="info">
+						<p class="goods-title">{{ item.goods_title }}</p>
+						<div class="goods-desc">{{ item.goods_desc }}</div>
+						<p class="create-time">{{ item.create_time }}</p>
+						<p class="price">￥{{ item.goods_price }}</p>
+					</div>
+					<div class="btn">
+						
+					</div>
+				</div>
+			</div></el-tab-pane>
+		<el-tab-pane label="我收藏的" name="collected">
+			<div class="item-list">
+				<div class="item" v-for="item in data.collected" :key="item._id">
+					<el-image :src="item.goods_cover" fit="cover">
+						<template #placeholder>
+							<div class="image-slot">
+								<el-icon size="36"><Loading /></el-icon>
+							</div>
+						</template>
+					</el-image>
+					<div class="info">
+						<p class="goods-title">{{ item.goods_title }}</p>
+						<div class="goods-desc">{{ item.goods_desc }}</div>
+						<p class="create-time">{{ item.create_time }}</p>
+						<p class="price">￥{{ item.goods_price }}</p>
+					</div>
+					<div class="btn">
+						
+					</div>
+				</div>
+			</div>
+
+		</el-tab-pane>
+		<el-tab-pane label="我卖出的" name="sold">
+			<div class="item-list">
+				<div class="item" v-for="item in data.sold" :key="item._id">
+					<el-image :src="item.goods_cover" fit="cover">
+						<template #placeholder>
+							<div class="image-slot">
+								<el-icon size="36"><Loading /></el-icon>
+							</div>
+						</template>
+					</el-image>
+					<div class="info">
+						<p class="goods-title">{{ item.goods_title }}</p>
+						<div class="goods-desc">{{ item.goods_desc }}</div>
+						<p class="create-time">{{ item.create_time }}</p>
+						<p class="price">￥{{ item.goods_price }}</p>
+					</div>
+					<div class="btn">
+						
+					</div>
+				</div>
+			</div>
+
+		</el-tab-pane>
+		<el-tab-pane label="我买到的" name="bought">
+			<div class="item-list">
+				<div class="item" v-for="item in data.bought" :key="item._id" @click="toOrderPage(item)">
+					<el-image :src="item.goods_cover" fit="cover">
+						<template #placeholder>
+							<div class="image-slot">
+								<el-icon size="36"><Loading /></el-icon>
+							</div>
+						</template>
+					</el-image>
+					<div class="info">
+						<p class="goods-title">{{ item.goods_title }}</p>
+						<div class="goods-desc">{{ item.goods_desc }}</div>
+						<p class="create-time">{{ item.create_time }}</p>
+						<p class="price">￥{{ item.goods_price }}  {{ item.order_status }}</p>
+					</div>
+					<div class="btn">
+						
+					</div>
+				</div>
+			</div>
+		</el-tab-pane>
+	</el-tabs>
 	</div>
 </template>
 <script setup>
-import { onMounted, ref, getCurrentInstance } from "vue";
+import { onMounted, ref, getCurrentInstance, reactive } from "vue";
+import { Loading } from "@element-plus/icons-vue";
 import request from "@/utils/request.js";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -30,17 +136,32 @@ import { useMain } from "@/store/index.js";
 const useStore = useMain();
 const { userInfo, personal } = storeToRefs(useStore);
 const { proxy } = getCurrentInstance();
+const activeName = ref('bought')
 console.log(userInfo);
 onMounted(async () => {
-	await getOrderInfo();
+	await getMyGoods();
 });
+
+// const filter = data => {
+// 	console.log('------');
+// 	console.log(data.value);
+// 	console.log('------');
+
+// 	return data.filter(item => item.category == activeName.value)
+// }
 
 const route = useRoute();
 const router = useRouter();
-let data = ref({});
 let pageLoading = ref();
+const data = reactive({
+	bought:[],
+	published:[],
+	removed:[],
+	sold:[],
+	collected:[]
+})
 
-const getOrderInfo = () => {
+const getMyGoods = () => {
 	pageLoading = proxy.$loading({
 		target: ".main",
 		text: "Loading...",
@@ -49,17 +170,21 @@ const getOrderInfo = () => {
 	});
 	return new Promise((resolve, reject) => {
 		request({
-			url: "/order_api/getOrderInfo",
+			url: "/personal/getMyGoods",
 			params: {
 				_id: route.params.id,
-				user_id: userInfo.value._id,
-				category: "买到的"
+				user_id: userInfo.value._id
 			}
 		})
 			.then(res => {
 				console.log(res);
-				if (res.code == 200) {
-					data.value = res.data;
+				if (res.code == 200) {					
+					data.bought = res.data.filter(item=>item.category == 'bought')
+					data.published =res.data.filter(item=>item.category == 'published')
+					data.removed = res.data.filter(item=>item.category == 'removed')
+					data.sold = res.data.filter(item=>item.category == 'sold')
+					data.collected = res.data.filter(item=>item.category == 'collected')
+					// console.log(data.value.bought);
 				}
 			})
 			.finally(() => {
@@ -68,9 +193,13 @@ const getOrderInfo = () => {
 			});
 	});
 };
-const activeName = ref('publish')
-const handleClick = (tab, event) => {
-  console.log(tab, event)
+const handleClickTab = (tab, event) => {
+  console.log(data[tab.paneName])
+}
+
+const toOrderPage = (item) => {
+	// console.log(item);
+	router.push(`/order/${item._id}`)
 }
 </script>
 
@@ -100,5 +229,47 @@ const handleClick = (tab, event) => {
 }
 .content{
     padding: 20px;
+	.item-list{
+		height: 550px;
+		overflow-y: auto;
+		.item{
+			display: flex;
+			margin-bottom: 20px;
+			cursor: pointer;
+			.el-image{		
+				flex: 0 0 auto;
+				margin-right: 20px;		
+				width: 100px;
+				height: 100px;
+			}
+			.info{
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				width: 50%;
+				overflow: hidden;
+				.goods-title{
+					font-weight: 600;
+					margin-bottom: 10px;
+					font-size: 14px;
+				}
+				.goods-desc{
+					margin-bottom: 5px;
+					color: #A8ABB2;
+					font-size: 14px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+				}
+				.create-time{
+					margin-bottom: 5px;
+					font-size: 14px;
+				}
+				.price{
+					color: red;
+				}
+			}
+		}
+	}
 }
 </style>
