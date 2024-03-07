@@ -41,7 +41,7 @@
 				欢迎参与留言
 			</div>
 			<div style="text-align: right">
-				<el-button class="cmt-btn" type="primary" @click="sendCmt">发表评论</el-button>
+				<el-button class="cmt-btn" type="primary" @click="sendCmt">发布留言</el-button>
 			</div>
 			<div class="cmt-list">
 				<div class="cmt-item" v-for="cmt in cmtList" :key="cmt._id">
