@@ -117,7 +117,7 @@ const getCommentList = () => {
 		request({
 			url: "/comment/getComment",
 			params: {
-				goods_id: data.value._id
+				goods_id: data.value?._id
 			}
 		})
 			.then(res => {
@@ -135,10 +135,10 @@ const getCommentList = () => {
 
 const handleClickWantToBy = () => {
 	if (!userInfo.value.account) {
-			ElMessage({
-				type: "error",
-				message: "请先登录！"
-			});		
+		ElMessage({
+			type: "error",
+			message: "请先登录！"
+		});		
 	} else {
 	request({
 		url: "/order_api/createOrder",
@@ -237,6 +237,12 @@ const cmtBlur = e => {
 };
 
 const sendCmt = () => {
+	if (!userInfo.value.account) {
+		return ElMessage({
+			type: "error",
+			message: "请先登录！"
+		});		
+	}
 	cmtLoading.value = true;
 	request({
 		url: "/comment/insertComment",

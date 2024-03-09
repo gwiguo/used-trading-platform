@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useMain } from "@/store/index.js";
+import { ElMessage } from "element-plus";
 
 const routes = [
     {
@@ -9,6 +11,9 @@ const routes = [
     {
         path: '/publish',
         name: 'Publish',
+        meta: {
+            requiresAuth:true
+        },
         component: () => import(/* webpackChunkName: "login" */ '../views/publish.vue'),
     },
     {
@@ -19,11 +24,17 @@ const routes = [
     {
         path: '/order/:id',
         name: 'order',
+        meta: {
+            requiresAuth:true
+        },
         component: () => import(/* webpackChunkName: "login" */ '../views/order_id.vue'),
     },
     {
         path: '/my',
         name: 'my',
+        meta: {
+            requiresAuth:true
+        },
         component: () => import(/* webpackChunkName: "login" */ '../views/my.vue'),
     },
     // {
@@ -50,5 +61,20 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+router.beforeEach((to, from) => {    
+    const useStore = useMain();
+    const { userInfo } = useStore;
+
+    if( to.meta.requiresAuth && !userInfo.account){
+        ElMessage({
+            type: "error",
+            message: "请先登录！"
+		});	
+        return false;
+    }else{
+        return true
+    }
+  })
 
 export default router;

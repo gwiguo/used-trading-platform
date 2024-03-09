@@ -78,7 +78,7 @@
 							:loading="loading"
 							>登录</el-button
 						>
-						<el-button class="sign-up" size="large" @click="handleClickRegister">注册</el-button>
+						<el-button class="sign-up" size="large" @click="handleClickRegister" :loading="registerLoading">注册</el-button>
 					</div>
 				</div>
 			</div>
@@ -106,6 +106,7 @@ const ruleFormRef = ref(null);
 const nameInputRef = ref(null);
 const searchVal = ref("");
 const loading = ref(false);
+const registerLoading = ref(false)
 
 // Cookies.get("user_info") && useStore.updateUserInfo(JSON.parse(Cookies.get("user_info")));
 
@@ -175,11 +176,7 @@ const rules = {
 };
 
 const toPublishPage = () => {
-	if (!userInfo.value.account) {
-		dialogVisible.value = true;
-	} else {
-		router.push("/publish");
-	}
+	router.push("/publish");
 };
 
 const toMy = () => {
@@ -223,7 +220,7 @@ const handleClickLogin = () => {
 				} else {
 					ElMessage({
 						type: "error",
-						message: "账号或密码错误！"
+						message: res.data.msg
 					});
 					loading.value = false;
 				}
@@ -260,6 +257,7 @@ const toHome = () => {
 };
 
 const handleClickRegister = () => {
+	registerLoading.value = true;
 	request({
 		url: "/user/registerUser",
 		method: "POST",
@@ -270,18 +268,23 @@ const handleClickRegister = () => {
 	}).then(res => {
 		console.log(res);
 		if (res.code === 200) {
-			handleClose();
 			ElMessage({
 				type: "success",
 				message: "用户注册成功！已自动为您登录~"
 			});
+			getPersonal(res.data._id);
+			handleClose();
+			Cookies.set("user_info", JSON.stringify(res.data));
+			useStore.updateUserInfo(res.data);
 		} else {
 			ElMessage({
 				type: "error",
 				message: res.message
 			});
 		}
-	});
+	}).finally(()=>{		
+		registerLoading.value = false;
+	})
 };
 
 const handleLogOut = () => {
