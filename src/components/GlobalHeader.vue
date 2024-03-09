@@ -1,7 +1,7 @@
 <template>
 	<header id="g-header">
 		<div class="bg-wrap">
-			<h1 @click="toHome">二手闲置交易平台</h1>
+			<h1 @click="toHome">太平洋二手闲置交易平台</h1>
 			<el-input v-model="searchVal" @keyup.enter.native="handleSearch" placeholder="搜闲置" class="input-search">
 				<template #append>
 					<el-button :icon="Search" @click="handleSearch" />
@@ -352,11 +352,11 @@ const handleClick = () => {
 		height: 42px;
 	}
 	.release-used-btn {
-		margin-left: 65px;
+		margin-left: 40px;
 		height: 42px;
 	}
 	.message-btn {
-		margin-left: 65px;
+		margin-left: 30px;
 		height: 42px;
 	}
 	.login-btn {
@@ -365,7 +365,7 @@ const handleClick = () => {
 	}
 	.user-wrap {
 		display: flex;
-		margin-left: 65px;
+		margin-left: 30px;
 		user-select: none;
 		cursor: pointer;
 		.user-name {
