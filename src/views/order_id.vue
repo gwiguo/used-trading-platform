@@ -2,29 +2,34 @@
 	<div class="top-container">
 		<el-image class="goods-img" v-if="data?.goods_cover?.length" :src="data?.goods_cover" fit="cover" />
 		<div class="info">
-			{{ data.category == 'bought' ? "买到的" : data.category == 'sold' ? "卖出的" : "" }}：
+			{{ data.category == "bought" ? "买到的" : data.category == "sold" ? "卖出的" : "" }}：
 			{{ data.goods_title }}
 			<span class="price">￥{{ data.goods_price }}</span>
 		</div>
 	</div>
 	<div class="block"></div>
 	<div class="address-container">
-		收货地址：{{ data.name }} {{ data.mobile }}
-		<div class="address">{{ data.address }}{{ data.address_detail }}</div>
+		收货地址：{{ data.name || "张三" }} {{ data.mobile || 13412345678 }}
+		<div class="address">{{ data.address || "广东省广州市天河区" }}{{ data.address_detail || "高普路115号" }}</div>
 	</div>
 	<div class="block"></div>
 	<div class="order-container">
 		<div class="order-title">订单信息（{{ data.order_status }}）：</div>
 		<div class="order-id">编号：{{ data._id }}</div>
-		<div class="pay-status">支付状态：  
-			<el-tag class="ml-2" :type="data.pay_status == '未支付'? 'danger':'success'">{{ data.pay_status }}</el-tag>
-</div>
-		<div class="pay-way">支付方式：{{ data.pay_way }}</div>
+		<div class="pay-status">
+			支付状态：
+			<el-tag class="ml-2" :type="data.pay_status == '未支付' ? 'danger' : 'success'">{{
+				data.pay_status
+			}}</el-tag>
+		</div>
+		<div class="pay-way">支付方式：{{ data.pay_way || "支付宝" }}</div>
 		<div class="create-time">创建时间：{{ data.create_time }}</div>
 		<div class="pay-time">支付时间：{{ data.pay_time }}</div>
 		<div class="btn-group">
 			<el-button type="danger" plain>取消订单</el-button>
-			<el-button type="primary" plain @click="handleClickPay" v-if="data.pay_status == '未支付'">立即支付</el-button>
+			<el-button type="primary" plain @click="handleClickPay" v-if="data.pay_status == '未支付'"
+				>立即支付</el-button
+			>
 		</div>
 	</div>
 </template>
@@ -105,50 +110,47 @@ const getOrderInfo = () => {
 	});
 };
 
-const handleClickPay = () => {	
+const handleClickPay = () => {
 	proxy
-		.$confirm("模拟支付宝支付，是否确认支付?", "支付订单",{
+		.$confirm("模拟支付宝支付，是否确认支付?", "支付订单", {
 			confirmButtonText: "支付",
 			cancelButtonText: "取消",
 			type: "warning"
 		})
 		.then(() => {
-			pay()
+			pay();
 		})
 		.catch(() => {});
-}
+};
 
 const pay = () => {
 	request({
-			url: "/order_api/payOrder",
-			method:"post",
-			data: {
-				_id: route.params.id,
-				pay_status:"已支付",
-				pay_way:'支付宝',
-				order_status:'待发货',
-				pay_time: formaDate(new Date())
+		url: "/order_api/payOrder",
+		method: "post",
+		data: {
+			_id: route.params.id,
+			pay_status: "已支付",
+			pay_way: "支付宝",
+			order_status: "待发货",
+			pay_time: formaDate(new Date())
+		}
+	})
+		.then(res => {
+			if (res.code == 200) {
+				ElMessage({
+					type: "success",
+					message: "支付成功！"
+				});
+				getOrderInfo();
+			} else {
+				ElMessage({
+					type: "error",
+					message: "支付失败~"
+				});
 			}
 		})
-			.then(res => {
-				if (res.code == 200) {
-					ElMessage({
-						type: "success",
-						message: "支付成功！"
-					});
-					getOrderInfo()
-				}else{
-					ElMessage({
-						type: "error",
-						message: "支付失败~"
-					});
-				}
-			})
-			.finally(() => {
-
-			});
-}
-
+		.finally(() => {});
+};
 </script>
 
 <style lang="less" scoped>

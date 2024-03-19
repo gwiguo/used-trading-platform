@@ -189,7 +189,7 @@ const handleCurrentChange = n => {
 					padding: 10px;
 					.title {
 						width: 100%;
-						// height: 52px;
+						height: 42px;
 						display: -webkit-box;
 						word-break: break-all;
 						font-size: 16px;

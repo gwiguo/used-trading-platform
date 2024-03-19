@@ -1,128 +1,116 @@
-templat<template>
+<template>
 	<div class="top-container">
-        <div class="left-container">
-            <el-avatar :size="150" :src="userInfo.avatar" />
-            <div class="info">
-                <div class="nickname">{{ userInfo.nickname }}</div>
-                <el-button type="primary" plain>编辑资料</el-button>
-            </div>
-        </div>
-        <el-button type="primary" plain class="edit-address">编辑收货地址</el-button>
+		<div class="left-container">
+			<el-avatar :size="150" :src="userInfo.avatar" />
+			<div class="info">
+				<div class="nickname">{{ userInfo.nickname }}</div>
+				<el-button type="primary" plain>编辑资料</el-button>
+			</div>
+		</div>
+		<el-button type="primary" plain class="edit-address">编辑收货地址</el-button>
 	</div>
 	<div class="block"></div>
 	<div class="content">
-	<el-tabs v-model="activeName"  @tab-click="handleClickTab">
-		<el-tab-pane label="我发布的" name="published">
-			<div class="item-list">
-				<div class="item" v-for="item in data.published" :key="item._id">
-					<el-image :src="item.goods_cover" fit="cover">
-						<template #placeholder>
-							<div class="image-slot">
-								<el-icon size="36"><Loading /></el-icon>
-							</div>
-						</template>
-					</el-image>
-					<div class="info">
-						<p class="goods-title">{{ item.goods_title }}</p>
-						<div class="goods-desc">{{ item.goods_desc }}</div>
-						<p class="create-time">{{ item.create_time }}</p>
-						<p class="price">￥{{ item.goods_price }}</p>
-					</div>
-					<div class="btn">
-						
-					</div>
-				</div>
-			</div></el-tab-pane>
-		<el-tab-pane label="我下架的" name="removed">
-			<div class="item-list">
-				<div class="item" v-for="item in data.removed" :key="item._id">
-					<el-image :src="item.goods_cover" fit="cover">
-						<template #placeholder>
-							<div class="image-slot">
-								<el-icon size="36"><Loading /></el-icon>
-							</div>
-						</template>
-					</el-image>
-					<div class="info">
-						<p class="goods-title">{{ item.goods_title }}</p>
-						<div class="goods-desc">{{ item.goods_desc }}</div>
-						<p class="create-time">{{ item.create_time }}</p>
-						<p class="price">￥{{ item.goods_price }}</p>
-					</div>
-					<div class="btn">
-						
-					</div>
-				</div>
-			</div></el-tab-pane>
-		<el-tab-pane label="我收藏的" name="collected">
-			<div class="item-list">
-				<div class="item" v-for="item in data.collected" :key="item._id">
-					<el-image :src="item.goods_cover" fit="cover">
-						<template #placeholder>
-							<div class="image-slot">
-								<el-icon size="36"><Loading /></el-icon>
-							</div>
-						</template>
-					</el-image>
-					<div class="info">
-						<p class="goods-title">{{ item.goods_title }}</p>
-						<div class="goods-desc">{{ item.goods_desc }}</div>
-						<p class="create-time">{{ item.create_time }}</p>
-						<p class="price">￥{{ item.goods_price }}</p>
-					</div>
-					<div class="btn">
-						
+		<el-tabs v-model="activeName" @tab-click="handleClickTab">
+			<el-tab-pane label="我发布的" name="published">
+				<div class="item-list">
+					<div class="item" v-for="item in data.published" :key="item._id">
+						<el-image :src="item.goods_cover" fit="cover">
+							<template #placeholder>
+								<div class="image-slot">
+									<el-icon size="36"><Loading /></el-icon>
+								</div>
+							</template>
+						</el-image>
+						<div class="info">
+							<p class="goods-title">{{ item.goods_title }}</p>
+							<div class="goods-desc">{{ item.goods_desc }}</div>
+							<p class="create-time">{{ item.create_time }}</p>
+							<p class="price">￥{{ item.goods_price }}</p>
+						</div>
+						<div class="btn"></div>
+					</div></div
+			></el-tab-pane>
+			<el-tab-pane label="我下架的" name="removed">
+				<div class="item-list">
+					<div class="item" v-for="item in data.removed" :key="item._id">
+						<el-image :src="item.goods_cover" fit="cover">
+							<template #placeholder>
+								<div class="image-slot">
+									<el-icon size="36"><Loading /></el-icon>
+								</div>
+							</template>
+						</el-image>
+						<div class="info">
+							<p class="goods-title">{{ item.goods_title }}</p>
+							<div class="goods-desc">{{ item.goods_desc }}</div>
+							<p class="create-time">{{ item.create_time }}</p>
+							<p class="price">￥{{ item.goods_price }}</p>
+						</div>
+						<div class="btn"></div>
+					</div></div
+			></el-tab-pane>
+			<el-tab-pane label="我收藏的" name="collected">
+				<div class="item-list">
+					<div class="item" v-for="item in data.collected" :key="item._id">
+						<el-image :src="item.goods_cover" fit="cover">
+							<template #placeholder>
+								<div class="image-slot">
+									<el-icon size="36"><Loading /></el-icon>
+								</div>
+							</template>
+						</el-image>
+						<div class="info">
+							<p class="goods-title">{{ item.goods_title }}</p>
+							<div class="goods-desc">{{ item.goods_desc }}</div>
+							<p class="create-time">{{ item.create_time }}</p>
+							<p class="price">￥{{ item.goods_price }}</p>
+						</div>
+						<div class="btn"></div>
 					</div>
 				</div>
-			</div>
-
-		</el-tab-pane>
-		<el-tab-pane label="我卖出的" name="sold">
-			<div class="item-list">
-				<div class="item" v-for="item in data.sold" :key="item._id">
-					<el-image :src="item.goods_cover" fit="cover">
-						<template #placeholder>
-							<div class="image-slot">
-								<el-icon size="36"><Loading /></el-icon>
-							</div>
-						</template>
-					</el-image>
-					<div class="info">
-						<p class="goods-title">{{ item.goods_title }}</p>
-						<div class="goods-desc">{{ item.goods_desc }}</div>
-						<p class="create-time">{{ item.create_time }}</p>
-						<p class="price">￥{{ item.goods_price }}</p>
-					</div>
-					<div class="btn">
-						
+			</el-tab-pane>
+			<el-tab-pane label="我卖出的" name="sold">
+				<div class="item-list">
+					<div class="item" v-for="item in data.sold" :key="item._id">
+						<el-image :src="item.goods_cover" fit="cover">
+							<template #placeholder>
+								<div class="image-slot">
+									<el-icon size="36"><Loading /></el-icon>
+								</div>
+							</template>
+						</el-image>
+						<div class="info">
+							<p class="goods-title">{{ item.goods_title }}</p>
+							<div class="goods-desc">{{ item.goods_desc }}</div>
+							<p class="create-time">{{ item.create_time }}</p>
+							<p class="price">￥{{ item.goods_price }}</p>
+						</div>
+						<div class="btn"></div>
 					</div>
 				</div>
-			</div>
-
-		</el-tab-pane>
-		<el-tab-pane label="我买到的" name="bought">
-			<div class="item-list">
-				<div class="item" v-for="item in data.bought" :key="item._id" @click="toOrderPage(item)">
-					<el-image :src="item.goods_cover" fit="cover">
-						<template #placeholder>
-							<div class="image-slot">
-								<el-icon size="36"><Loading /></el-icon>
-							</div>
-						</template>
-					</el-image>
-					<div class="info">
-						<p class="goods-title">{{ item.goods_title }}</p>
-						<div class="goods-desc">{{ item.goods_desc }}</div>
-						<p class="create-time">{{ item.create_time }}</p>
-						<p class="price">￥{{ item.goods_price }}  {{ item.order_status }}</p>
-					</div>
-					<div class="btn">
-						
+			</el-tab-pane>
+			<el-tab-pane label="我买到的" name="bought">
+				<div class="item-list">
+					<div class="item" v-for="item in data.bought" :key="item._id" @click="toOrderPage(item)">
+						<el-image :src="item.goods_cover" fit="cover">
+							<template #placeholder>
+								<div class="image-slot">
+									<el-icon size="36"><Loading /></el-icon>
+								</div>
+							</template>
+						</el-image>
+						<div class="info">
+							<p class="goods-title">{{ item.goods_title }}</p>
+							<div class="goods-desc">{{ item.goods_desc }}</div>
+							<p class="create-time">{{ item.create_time }}</p>
+							<p class="price">￥{{ item.goods_price }} {{ item.order_status }}</p>
+						</div>
+						<div class="btn"></div>
 					</div>
 				</div>
-			</div>
-		</el-tab-pane>
-	</el-tabs>
+			</el-tab-pane>
+		</el-tabs>
 	</div>
 </template>
 <script setup>
@@ -136,7 +124,7 @@ import { useMain } from "@/store/index.js";
 const useStore = useMain();
 const { userInfo, personal } = storeToRefs(useStore);
 const { proxy } = getCurrentInstance();
-const activeName = ref('bought')
+const activeName = ref("bought");
 console.log(userInfo);
 onMounted(async () => {
 	await getMyGoods();
@@ -154,12 +142,12 @@ const route = useRoute();
 const router = useRouter();
 let pageLoading = ref();
 const data = reactive({
-	bought:[],
-	published:[],
-	removed:[],
-	sold:[],
-	collected:[]
-})
+	bought: [],
+	published: [],
+	removed: [],
+	sold: [],
+	collected: []
+});
 
 const getMyGoods = () => {
 	pageLoading = proxy.$loading({
@@ -177,14 +165,12 @@ const getMyGoods = () => {
 			}
 		})
 			.then(res => {
-				console.log(res);
-				if (res.code == 200) {					
-					data.bought = res.data.filter(item=>item.category == 'bought')
-					data.published =res.data.filter(item=>item.category == 'published')
-					data.removed = res.data.filter(item=>item.category == 'removed')
-					data.sold = res.data.filter(item=>item.category == 'sold')
-					data.collected = res.data.filter(item=>item.category == 'collected')
-					// console.log(data.value.bought);
+				if (res.code == 200) {
+					data.bought = res.data.filter(item => item.category == "bought");
+					data.published = res.data.filter(item => item.category == "published");
+					data.removed = res.data.filter(item => item.category == "removed");
+					data.sold = res.data.filter(item => item.category == "sold");
+					data.collected = res.data.filter(item => item.category == "collected");
 				}
 			})
 			.finally(() => {
@@ -194,78 +180,78 @@ const getMyGoods = () => {
 	});
 };
 const handleClickTab = (tab, event) => {
-  console.log(data[tab.paneName])
-}
+	console.log(data[tab.paneName]);
+};
 
-const toOrderPage = (item) => {
+const toOrderPage = item => {
 	// console.log(item);
-	router.push(`/order/${item._id}`)
-}
+	router.push(`/order/${item._id}`);
+};
 </script>
 
 <style lang="less" scoped>
 .top-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: 20px;
 	font-size: 20px;
 	font-weight: bold;
-    .left-container{        
-        display: flex;
-        align-items: center;
-    }
-    .nickname{
-        margin-bottom: 20px;
-    }
-    .edit-address{
-        margin-right: 50px;
-    }
+	.left-container {
+		display: flex;
+		align-items: center;
+	}
+	.nickname {
+		margin-bottom: 20px;
+	}
+	.edit-address {
+		margin-right: 50px;
+	}
 }
 .block {
 	width: 100%;
 	height: 20px;
 	background-color: rgb(246, 246, 246);
 }
-.content{
-    padding: 20px;
-	.item-list{
+.content {
+	padding: 20px;
+	.item-list {
 		height: 550px;
 		overflow-y: auto;
-		.item{
+		.item {
 			display: flex;
 			margin-bottom: 20px;
 			cursor: pointer;
-			.el-image{		
+			.el-image {
 				flex: 0 0 auto;
-				margin-right: 20px;		
+				margin-right: 20px;
 				width: 100px;
 				height: 100px;
 			}
-			.info{
+			.info {
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
 				width: 50%;
 				overflow: hidden;
-				.goods-title{
+				.goods-title {
 					font-weight: 600;
 					margin-bottom: 10px;
 					font-size: 14px;
 				}
-				.goods-desc{
+				.goods-desc {
 					margin-bottom: 5px;
-					color: #A8ABB2;
+					color: #a8abb2;
 					font-size: 14px;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
 				}
-				.create-time{
+				.create-time {
 					margin-bottom: 5px;
 					font-size: 14px;
 				}
-				.price{
+				.price {
 					color: red;
 				}
 			}

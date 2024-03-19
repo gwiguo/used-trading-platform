@@ -37,8 +37,16 @@
 			element-loading-spinner='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>'
 		>
 			<h2>全部留言</h2>
-			<div class="cmt-editor" ref="cmtEditor" contenteditable="true" @focus="cmtFocus" @blur="cmtBlur">
-				欢迎参与留言
+			<div
+				class="cmt-editor"
+				:style="{ color: computedCmtContentColor }"
+				ref="cmtEditor"
+				contenteditable="true"
+				@focus="cmtFocus"
+				@blur="cmtBlur"
+				@input="changeCmtContent"
+			>
+				{{ cmtContent }}
 			</div>
 			<div style="text-align: right">
 				<el-button class="cmt-btn" type="primary" @click="sendCmt">发布留言</el-button>
@@ -73,6 +81,7 @@ const { userInfo, personal } = storeToRefs(useStore);
 import { formaDate } from "@/utils/utils.js";
 
 const cmtEditor = ref(null);
+const cmtContent = ref("欢迎参与留言~");
 const cmtLoading = ref(false);
 let data = ref({});
 let pageLoading = ref();
@@ -138,41 +147,40 @@ const handleClickWantToBy = () => {
 		ElMessage({
 			type: "error",
 			message: "请先登录！"
-		});		
+		});
 	} else {
-	request({
-		url: "/order_api/createOrder",
-		method: "post",
-		data: {
-			user_id: userInfo.value._id,
-			goods_id: route.params.id,
-			goods_title: data.value.title,
-			goods_desc: data.value.desc,
-			category: "bought",
-			create_time: formaDate(new Date()),
-			pay_time: "",
-			pay_status: "未支付",
-			pay_way: "",
-			order_status: "待付款",
-			goods_price: data.value.price,
-			goods_cover: data.value.images[0],
-			mobile: "",
-			address: "",
-			name: "",
-			address_detail: ""
-		}
-	}).then(res => {
-		console.log(res);
-		if (res.code == 200) {
-			router.push(`/order/${res.data?.order_id}`);
-		} else {
-			ElMessage({
-				type: "error",
-				message: "数据库异常！"
-			});
-		}
-	});
-
+		request({
+			url: "/order_api/createOrder",
+			method: "post",
+			data: {
+				user_id: userInfo.value._id,
+				goods_id: route.params.id,
+				goods_title: data.value.title,
+				goods_desc: data.value.desc,
+				category: "bought",
+				create_time: formaDate(new Date()),
+				pay_time: "",
+				pay_status: "未支付",
+				pay_way: "",
+				order_status: "待付款",
+				goods_price: data.value.price,
+				goods_cover: data.value.images[0],
+				mobile: "",
+				address: "",
+				name: "",
+				address_detail: ""
+			}
+		}).then(res => {
+			console.log(res);
+			if (res.code == 200) {
+				router.push(`/order/${res.data?.order_id}`);
+			} else {
+				ElMessage({
+					type: "error",
+					message: "数据库异常！"
+				});
+			}
+		});
 	}
 };
 
@@ -181,58 +189,65 @@ const collectOperate = () => {
 		ElMessage({
 			type: "error",
 			message: "请先登录！"
-		});		
+		});
 	} else {
-	collectLoading.value = true;
-	request({
-		url: "/personal/collect",
-		method: "post",
-		data: {
-			user_id: userInfo.value._id,
-			goods_id: route.params.id
-		}
-	}).then(res => {
-		if (res.code == 200) {
-			request({
-				url: "/personal/getPersonal",
-				params: {
-					user_id: userInfo.value._id
-				}
-			})
-				.then(res => {
-					if (res.code == 200) {
-						useStore.updatePersonal(res.data);
-						ElMessage({
-							type: "success",
-							message: personal.value?.collected?.includes(data.value?._id) ? "收藏成功~" : "取消收藏~"
-						});
+		collectLoading.value = true;
+		request({
+			url: "/personal/collect",
+			method: "post",
+			data: {
+				user_id: userInfo.value._id,
+				goods_id: route.params.id
+			}
+		}).then(res => {
+			if (res.code == 200) {
+				request({
+					url: "/personal/getPersonal",
+					params: {
+						user_id: userInfo.value._id
 					}
 				})
-				.finally(() => {
-					collectLoading.value = false;
+					.then(res => {
+						if (res.code == 200) {
+							useStore.updatePersonal(res.data);
+							ElMessage({
+								type: "success",
+								message: personal.value?.collected?.includes(data.value?._id)
+									? "收藏成功~"
+									: "取消收藏~"
+							});
+						}
+					})
+					.finally(() => {
+						collectLoading.value = false;
+					});
+			} else {
+				ElMessage({
+					type: "error",
+					message: "数据库异常！"
 				});
-		} else {
-			ElMessage({
-				type: "error",
-				message: "数据库异常！"
-			});
-		}
-	});
-
+			}
+		});
 	}
 };
 
 const collectLoading = ref(false);
 const isCollected = computed(() => (personal.value?.collected?.includes(data.value?._id) ? StarFilled : Star));
 const collectBtnText = computed(() => (personal.value?.collected?.includes(data.value?._id) ? "已收藏" : "收藏"));
+const computedCmtContentColor = computed(() => (cmtContent.value === "欢迎参与留言~" ? "#ccc" : "#000"));
+
+const changeCmtContent = e => {
+	cmtContent.value = e.target.textContent.trim();
+};
+
 const cmtFocus = e => {
-	if (e.target.innerText == "欢迎参与留言") {
-		e.target.innerText = "";
+	if (cmtContent.value == "欢迎参与留言~") {
+		cmtContent.value = "";
 	}
 };
 const cmtBlur = e => {
-	if (e.target.innerText == "") {
-		e.target.innerText = "欢迎参与留言";
+	if (cmtContent.value == "") {
+		cmtContent.value = "欢迎参与留言~";
 	}
 };
 
@@ -241,7 +256,13 @@ const sendCmt = () => {
 		return ElMessage({
 			type: "error",
 			message: "请先登录！"
-		});		
+		});
+	}
+	if (cmtContent.value == "欢迎参与留言~" || !cmtContent.value?.trim()) {
+		return ElMessage({
+			type: "error",
+			message: "留言不能为空！"
+		});
 	}
 	cmtLoading.value = true;
 	request({
@@ -249,7 +270,7 @@ const sendCmt = () => {
 		method: "post",
 		data: {
 			goods_id: data.value._id,
-			content: cmtEditor.value.innerText,
+			content: cmtContent.value,
 			avatar: userInfo.value.avatar,
 			nickname: userInfo.value.nickname,
 			time: formaDate(new Date())
@@ -258,7 +279,7 @@ const sendCmt = () => {
 		.then(res => {
 			if (res.code == 200) {
 				getCommentList();
-				cmtEditor.value.innerText = "欢迎参与留言";
+				cmtContent.value = "欢迎参与留言~";
 				ElMessage({
 					type: "success",
 					message: "留言成功~"
@@ -276,16 +297,20 @@ const sendCmt = () => {
 	padding: 10px 20px;
 	display: flex;
 	justify-content: space-between;
+
 	.left-container {
 		display: flex;
+
 		.publish-time {
 			color: #aaa;
 		}
 	}
+
 	.right-container {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
 		// width: 330px;
 		.price {
 			margin-right: 20px;
@@ -295,15 +320,18 @@ const sendCmt = () => {
 		}
 	}
 }
+
 .block {
 	width: 100%;
 	height: 20px;
 	background-color: rgb(246, 246, 246);
 }
+
 .content-container {
 	overflow-y: auto;
 	padding-top: 20px;
 	height: calc(100% - 160px);
+
 	&::-webkit-scrollbar {
 		width: 7px;
 	}
@@ -312,27 +340,33 @@ const sendCmt = () => {
 		background: #79bbff; // 滑块颜色
 		border-radius: 5px; // 滑块圆角
 	}
+
 	.content {
 		padding: 0 40px;
 		padding-bottom: 20px;
 		min-height: 50%;
+
 		h1 {
 			margin-top: 0;
 			font-size: 24px;
 		}
+
 		.el-image {
 			margin: 10px 0;
 			left: 50%;
 			transform: translateX(-50%);
 		}
 	}
+
 	.comment {
 		padding: 0 40px 40px 40px;
+
 		&::after {
 			content: "";
 			display: block;
 			clear: both;
 		}
+
 		// background-color: #f66;
 		.cmt-editor {
 			padding: 15px 20px;
@@ -340,25 +374,32 @@ const sendCmt = () => {
 			background-color: #f8fafd;
 			color: rgb(204, 204, 204);
 			outline: none;
+			border: #eaedf0 1px solid;
 		}
+
 		.cmt-btn {
 			margin-top: 20px;
 			margin-bottom: 20px;
 			border-radius: 0;
 		}
+
 		.cmt-list {
 			.cmt-item {
 				margin-bottom: 20px;
+
 				.top {
 					.el-avatar {
 						margin-right: 10px;
 					}
+
 					display: flex;
 					align-items: center;
 				}
+
 				.cmt-info {
 					margin-left: 85px;
 				}
+
 				.cmt-time {
 					margin-left: 85px;
 					margin-top: 20px;
