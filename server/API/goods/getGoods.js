@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 
     __connectDB((db, client) => {
         console.log(where);
-        db.collection("goods").find(where).skip(10 * (pageNum - 1)).limit(10).toArray()
+        db.collection("goods").find(where).sort({publish_time:-1}).skip(10 * (pageNum - 1)).limit(10).toArray()
             .then(async (data) => {
                 const total = await db.collection("goods").countDocuments(where);
                 res.send({
