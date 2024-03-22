@@ -2,13 +2,26 @@
 	<header id="g-header">
 		<div class="bg-wrap">
 			<h1 @click="toHome">太平洋二手闲置交易平台</h1>
-			<el-input v-model="searchVal" @keyup.enter.native="handleSearch" placeholder="搜闲置" class="input-search">
+			<el-input
+				v-model="searchVal"
+				@keyup.enter.native="handleSearch"
+				placeholder="搜闲置"
+				class="input-search"
+			>
 				<template #append>
 					<el-button :icon="Search" @click="handleSearch" />
 				</template>
 			</el-input>
-			<el-button class="release-used-btn" type="primary" :icon="Plus" @click="toPublishPage">发布闲置</el-button>
-			<el-button class="message-btn" type="primary" :icon="ChatDotSquare">消息</el-button>
+			<el-button
+				class="release-used-btn"
+				type="primary"
+				:icon="Plus"
+				@click="toPublishPage"
+				>发布闲置</el-button
+			>
+			<el-button class="message-btn" type="primary" :icon="ChatDotSquare"
+				>消息</el-button
+			>
 			<div class="user-wrap" v-if="userInfo.nickname">
 				<el-dropdown popper-class="user-dropdown">
 					<div style="display: flex; outline: none">
@@ -17,15 +30,28 @@
 					</div>
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item :icon="User" @click="toMy">个人中心</el-dropdown-item>
-							<el-dropdown-item :icon="SwitchButton" @click="handleLogOut">退出登录</el-dropdown-item>
+							<el-dropdown-item :icon="User" @click="toMy"
+								>个人中心</el-dropdown-item
+							>
+							<el-dropdown-item
+								:icon="SwitchButton"
+								@click="handleLogOut"
+								>退出登录</el-dropdown-item
+							>
 						</el-dropdown-menu>
 					</template>
 				</el-dropdown>
 				<!-- <p class="user-name">{{ userInfo.nickname }}</p>
 				<el-avatar :size="50" :src="userInfo.avatar" /> -->
 			</div>
-			<el-button text type="primary" class="login-btn" v-else @click="dialogVisible = true">登录</el-button>
+			<el-button
+				text
+				type="primary"
+				class="login-btn"
+				v-else
+				@click="dialogVisible = true"
+				>登录</el-button
+			>
 		</div>
 	</header>
 	<el-dialog
@@ -78,7 +104,13 @@
 							:loading="loading"
 							>登录</el-button
 						>
-						<el-button class="sign-up" size="large" @click="handleClickRegister" :loading="registerLoading">注册</el-button>
+						<el-button
+							class="sign-up"
+							size="large"
+							@click="handleClickRegister(ruleFormRef)"
+							:loading="registerLoading"
+							>注册</el-button
+						>
 					</div>
 				</div>
 			</div>
@@ -90,7 +122,15 @@
 import { ref, reactive, nextTick, getCurrentInstance } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { ElMessage, ElNotification } from "element-plus";
-import { Search, Plus, ChatDotSquare, CloseBold, User, Lock, SwitchButton } from "@element-plus/icons-vue";
+import {
+	Search,
+	Plus,
+	ChatDotSquare,
+	CloseBold,
+	User,
+	Lock,
+	SwitchButton,
+} from "@element-plus/icons-vue";
 import request from "@/utils/request.js";
 import { storeToRefs } from "pinia";
 import { useMain } from "@/store/index.js";
@@ -106,7 +146,7 @@ const ruleFormRef = ref(null);
 const nameInputRef = ref(null);
 const searchVal = ref("");
 const loading = ref(false);
-const registerLoading = ref(false)
+const registerLoading = ref(false);
 
 // Cookies.get("user_info") && useStore.updateUserInfo(JSON.parse(Cookies.get("user_info")));
 
@@ -120,16 +160,16 @@ const handleSearch = () => {
 			target: ".wrap",
 			text: "Loading...",
 			spinner:
-				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>'
+				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>',
 		});
 		request({
 			url: "/goods/getGoods",
 			params: {
 				title: searchVal.value,
-				type: useStore.currentType
-			}
+				type: useStore.currentType,
+			},
 		})
-			.then(res => {
+			.then((res) => {
 				console.log(res);
 				if (res.code === 200) {
 					useStore.updateDataList(res.list);
@@ -145,7 +185,7 @@ const handleSearch = () => {
 
 const account = reactive({
 	name: "test",
-	password: "test"
+	password: "test",
 });
 
 const rules = {
@@ -153,26 +193,26 @@ const rules = {
 		{
 			required: true,
 			message: "请输入账号",
-			trigger: "blur"
+			trigger: "blur",
 		},
 		{
 			pattern: /^[a-z0-9]{4,10}$/,
 			message: "用户名必须是4-10个字母或者数字",
-			trigger: "blur"
-		}
+			trigger: "blur",
+		},
 	],
 	password: [
 		{
 			required: true,
 			message: "请输入密码",
-			trigger: "blur"
+			trigger: "blur",
 		},
 		{
-			pattern: /^[a-z0-9]{3,}$/,
-			message: "密码必须是3位以上的字母或者数字",
-			trigger: "blur"
-		}
-	]
+			pattern: /^[a-z0-9]{4,}$/,
+			message: "密码必须是4位以上的字母或者数字",
+			trigger: "blur",
+		},
+	],
 };
 
 const toPublishPage = () => {
@@ -184,7 +224,7 @@ const toMy = () => {
 };
 
 const dialogVisible = ref(false);
-const handleClose = done => {
+const handleClose = (done) => {
 	dialogVisible.value = false;
 	ruleFormRef.value.resetFields();
 };
@@ -195,7 +235,7 @@ const openDialogCallBack = () => {
 };
 
 const handleClickLogin = () => {
-	ruleFormRef.value.validate(valid => {
+	ruleFormRef.value.validate((valid) => {
 		if (valid) {
 			loading.value = true;
 			request({
@@ -203,43 +243,44 @@ const handleClickLogin = () => {
 				method: "POST",
 				data: {
 					account: account.name,
-					password: account.password
-				}
-			}).then(res => {
+					password: account.password,
+				},
+			}).then((res) => {
 				if (res.code === 200) {
+					if(res.data.status === false){
+						return ElMessage({
+							type: "error",
+							message: "用户已被封禁！",
+						});
+					}
 					getPersonal(res.data._id);
-					loading.value = false;
 					ElMessage({
 						type: "success",
-						message: "欢迎登陆二手闲置交易平台~"
+						message: "欢迎登陆二手闲置交易平台~",
 					});
 					handleClose();
 					Cookies.set("user_info", JSON.stringify(res.data));
 					useStore.updateUserInfo(res.data);
 					console.log(res.data);
-				} else {
-					ElMessage({
-						type: "error",
-						message: res.data.msg
-					});
-					loading.value = false;
 				}
-			});
+			}).finally(()=>{
+				loading.value = false;
+			})
 		} else {
 			return false;
 		}
 	});
 };
 
-const getPersonal = user_id => {
+const getPersonal = (user_id) => {
 	return new Promise((resolve, reject) => {
 		request({
 			url: "/personal/getPersonal",
 			params: {
-				user_id
-			}
+				user_id,
+			},
 		})
-			.then(res => {
+			.then((res) => {
 				console.log(res);
 				if (res.code == 200) {
 					useStore.updatePersonal(res.data);
@@ -256,35 +297,45 @@ const toHome = () => {
 	router.push("/");
 };
 
-const handleClickRegister = () => {
-	registerLoading.value = true;
-	request({
-		url: "/user/registerUser",
-		method: "POST",
-		data: {
-			account: account.name,
-			password: account.password
-		}
-	}).then(res => {
-		console.log(res);
-		if (res.code === 200) {
-			ElMessage({
-				type: "success",
-				message: "用户注册成功！已自动为您登录~"
-			});
-			getPersonal(res.data._id);
-			handleClose();
-			Cookies.set("user_info", JSON.stringify(res.data));
-			useStore.updateUserInfo(res.data);
+const handleClickRegister = async (formEl) => {
+	if (!formEl) return;
+
+	await formEl.validate((valid, fields) => {
+		if (valid) {
+			registerLoading.value = true;
+			request({
+				url: "/user/registerUser",
+				method: "POST",
+				data: {
+					account: account.name,
+					password: account.password,
+				},
+			})
+				.then((res) => {
+					console.log(res);
+					if (res.code === 200) {
+						ElMessage({
+							type: "success",
+							message: "用户注册成功！已自动为您登录~",
+						});
+						getPersonal(res.data._id);
+						handleClose();
+						Cookies.set("user_info", JSON.stringify(res.data));
+						useStore.updateUserInfo(res.data);
+					} else {
+						ElMessage({
+							type: "error",
+							message: res.message,
+						});
+					}
+				})
+				.finally(() => {
+					registerLoading.value = false;
+				});
 		} else {
-			ElMessage({
-				type: "error",
-				message: res.message
-			});
+			console.log("error submit!", fields);
 		}
-	}).finally(()=>{		
-		registerLoading.value = false;
-	})
+	});
 };
 
 const handleLogOut = () => {
@@ -292,20 +343,20 @@ const handleLogOut = () => {
 		.$confirm("是否退出登录?", {
 			confirmButtonText: "确定",
 			cancelButtonText: "取消",
-			type: "warning"
+			type: "warning",
 		})
 		.then(() => {
 			useStore.clear();
 			const logOutLoading = proxy.$loading({
 				text: "Loading...",
 				spinner:
-					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>'
+					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>',
 			});
 			setTimeout(() => logOutLoading.close(), 500);
 			Cookies.remove("user_info");
 			ElMessage({
 				type: "success",
-				message: "退出登录成功！"
+				message: "退出登录成功！",
 			});
 			router.push("/");
 		})
@@ -321,15 +372,6 @@ const handleClickSignInBtn = () => {
 	console.log(SignInDialogVisible.value);
 };
 
-const handleClick = () => {
-	ElMessage({
-		type: "success",
-		message: "test"
-	});
-	ElNotification({
-		message: "ElNotification "
-	});
-};
 </script>
 
 <style lang="less" scoped>
