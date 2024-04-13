@@ -1,4 +1,5 @@
 <template>
+	<Global-header></Global-header>
 	<div class="top-container">
 		<div class="left-container">
 			<el-avatar shape="square" :size="100" :src="data?.user_avatar" />
@@ -9,7 +10,8 @@
 		</div>
 		<div class="right-container">
 			<div class="price">￥{{ data?.price }}</div>
-			<el-button type="danger" plain size="large" :icon="Goods" @click="handleClickWantToBy">我想要</el-button>
+			<el-button type="danger" plain size="large" :icon="Goods"
+				:loading="buyLoading" @click="handleClickWantToBy">我想要</el-button>
 			<el-button
 				type="primary"
 				plain
@@ -149,6 +151,7 @@ const handleClickWantToBy = () => {
 			message: "请先登录！"
 		});
 	} else {
+		buyLoading.value = true;
 		request({
 			url: "/order_api/createOrder",
 			method: "post",
@@ -180,7 +183,7 @@ const handleClickWantToBy = () => {
 					message: "数据库异常！"
 				});
 			}
-		});
+		}).finally(()=>buyLoading.value = false);
 	}
 };
 
@@ -232,6 +235,7 @@ const collectOperate = () => {
 };
 
 const collectLoading = ref(false);
+const buyLoading = ref(false)
 const isCollected = computed(() => (personal.value?.collected?.includes(data.value?._id) ? StarFilled : Star));
 const collectBtnText = computed(() => (personal.value?.collected?.includes(data.value?._id) ? "已收藏" : "收藏"));
 const computedCmtContentColor = computed(() => (cmtContent.value === "欢迎参与留言~" ? "#ccc" : "#000"));
@@ -333,7 +337,7 @@ const sendCmt = () => {
 	height: calc(100% - 160px);
 
 	&::-webkit-scrollbar {
-		width: 7px;
+		width: 5px;
 	}
 
 	&::-webkit-scrollbar-thumb {

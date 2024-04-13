@@ -6,36 +6,51 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "login" */ '../views/home.vue'),
+        component: () => import(/* webpackChunkName: "login" */ '../views/index.vue'),
+        children:[
+            {
+                path: '/',
+                name: 'home',
+                component: () => import(/* webpackChunkName: "login" */ '../views/home.vue'),
+            },
+            {
+                path: '/publish',
+                name: 'Publish',
+                meta: {
+                    requiresAuth:true
+                },
+                component: () => import(/* webpackChunkName: "login" */ '../views/publish.vue'),
+            },
+            {
+                path: '/item/:id',
+                name: 'item',
+                component: () => import(/* webpackChunkName: "login" */ '../views/goods_id.vue'),
+            },
+            {
+                path: '/order/:id',
+                name: 'order',
+                meta: {
+                    requiresAuth:true
+                },
+                component: () => import(/* webpackChunkName: "login" */ '../views/order_id.vue'),
+            },
+            {
+                path: '/my',
+                name: 'my',
+                meta: {
+                    requiresAuth:true
+                },
+                component: () => import(/* webpackChunkName: "login" */ '../views/my.vue'),
+            },
+        ]
     },
     {
-        path: '/publish',
-        name: 'Publish',
+        path: '/cms',
+        name: 'cms',
         meta: {
             requiresAuth:true
         },
-        component: () => import(/* webpackChunkName: "login" */ '../views/publish.vue'),
-    },
-    {
-        path: '/item/:id',
-        name: 'item',
-        component: () => import(/* webpackChunkName: "login" */ '../views/goods_id.vue'),
-    },
-    {
-        path: '/order/:id',
-        name: 'order',
-        meta: {
-            requiresAuth:true
-        },
-        component: () => import(/* webpackChunkName: "login" */ '../views/order_id.vue'),
-    },
-    {
-        path: '/my',
-        name: 'my',
-        meta: {
-            requiresAuth:true
-        },
-        component: () => import(/* webpackChunkName: "login" */ '../views/my.vue'),
+        component: () => import(/* webpackChunkName: "login" */ '../views/cms.vue'),
     },
     // {
     //     path: '/login',

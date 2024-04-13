@@ -21,11 +21,16 @@ const upload = require("./api/upload/upload.js")
 const getPersonal = require("./api/personal/getPersonal.js");
 const collect = require("./api/personal/collect.js");
 const getMyGoods = require("./api/personal/getMyGoods.js");
+const updateUserInfo = require("./api/user/updateUserInfo.js");
 
 // 订单
 const getOrderInfo = require("./api/order/getOrderInfo.js");
 const createOrder = require("./api/order/createOrder.js");
 const payOrder = require("./api/order/payOrder.js");
+
+// 后台系统
+const getAllGoods = require("./api/admin/getAllGoods.js");
+const deleteGoods = require("./api/admin/deleteGoods.js");
 
 
 
@@ -56,6 +61,11 @@ router.get("/getOrderInfo", getOrderInfo);
 router.post("/payOrder", payOrder);
 router.get("/getMyGoods", getMyGoods);
 router.post("/createOrder", createOrder);
+router.post("/updateUserInfo", updateUserInfo);
+
+
+router.get("/admin/getAllGoods", getAllGoods);
+router.post("/admin/deleteGoods", deleteGoods);
 
 router.post("/upload", upload.single("file"), (req, res) => {
     // console.log(req.file);

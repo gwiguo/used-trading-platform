@@ -88,6 +88,7 @@
 								placeholder="请输入密码"
 								class="input-password"
 								size="large"
+								@keyup.enter.native="handleClickLogin"
 							></el-input>
 						</el-form-item>
 					</el-form>
@@ -253,15 +254,23 @@ const handleClickLogin = () => {
 							message: "用户已被封禁！",
 						});
 					}
+					if(res.data.role === 'admin'){
+						router.push('/cms')
+					}
 					getPersonal(res.data._id);
 					ElMessage({
 						type: "success",
-						message: "欢迎登陆二手闲置交易平台~",
+						message: res.data.role === 'admin' ? '欢迎登陆后台~' :"欢迎登陆二手闲置交易平台~",
 					});
 					handleClose();
 					Cookies.set("user_info", JSON.stringify(res.data));
 					useStore.updateUserInfo(res.data);
 					console.log(res.data);
+				}else{
+					ElMessage({
+						type: "error",
+						message: "账号或密码错误~",
+					});
 				}
 			}).finally(()=>{
 				loading.value = false;

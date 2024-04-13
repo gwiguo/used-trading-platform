@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 					role: "user",
 					nickname: account,
 					status: true,
-					avatar: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+					avatar: "/uploads/default.png",
 				});
 			if (insertResult.insertedId) {
                 const user_data =  await db.collection("user").findOne({_id:insertResult.insertedId})

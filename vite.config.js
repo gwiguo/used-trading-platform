@@ -59,6 +59,10 @@ export default ({ mode }) => defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/order_api/, ''),
       },
+      "/admin": {
+        target: loadEnv(mode, process.cwd()).VITE_BACKEND,
+        changeOrigin: true
+      },
     }
   }
 })
