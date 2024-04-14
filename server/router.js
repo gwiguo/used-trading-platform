@@ -30,7 +30,11 @@ const payOrder = require("./api/order/payOrder.js");
 
 // 后台系统
 const getAllGoods = require("./api/admin/getAllGoods.js");
+const getAllOrder = require("./api/admin/getAllOrder.js");
+const getAllUser = require("./api/admin/getAllUser.js");
 const deleteGoods = require("./api/admin/deleteGoods.js");
+const deleteOrder = require("./api/admin/deleteOrder.js");
+const setUserStatus = require("./api/admin/setUserStatus.js");
 
 
 
@@ -63,9 +67,13 @@ router.get("/getMyGoods", getMyGoods);
 router.post("/createOrder", createOrder);
 router.post("/updateUserInfo", updateUserInfo);
 
-
+// 后台系统接口
 router.get("/admin/getAllGoods", getAllGoods);
 router.post("/admin/deleteGoods", deleteGoods);
+router.get("/admin/getAllUser", getAllUser);
+router.get("/admin/getAllOrder", getAllOrder);
+router.post("/admin/deleteOrder", deleteOrder);
+router.post("/admin/setUserStatus", setUserStatus);
 
 router.post("/upload", upload.single("file"), (req, res) => {
     // console.log(req.file);
