@@ -1,5 +1,4 @@
 <template>
-	<Global-header></Global-header>
 	<div class="top-container">
 		<div class="left-container">
 			<el-avatar shape="square" :size="100" :src="data?.user_avatar" />

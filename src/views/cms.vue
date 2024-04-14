@@ -29,12 +29,10 @@
 					>
 				</el-col>
 			</el-row>
-			<el-row class="table-container">
-				<el-col :span="24">
-					<el-card>
+					<el-card class="table-container">
 						<el-table
 							:data="tableData"
-							height="600"
+							height="800"
 							style="width: 100%"
 							v-loading="tableLoading"
 							element-loading-text="Loading..."
@@ -45,11 +43,38 @@
 									currentMenuIndex
 								]['columnList']"
 								:key="index"
-								:prop="item.prop"
 								:label="item.label"
 								:width="item.width"
-								:align="item.align"
-							/>
+								:align="item.align">
+								<template #default="scope">
+									<template v-if="item.prop == 'goods_cover'">
+										<el-image style="width: 100px; height: 100px" :src="scope.row[item.prop]" />
+									</template>
+									<template v-else>										
+										<template v-if="item.prop == 'order_status'">
+											<el-tag :type="scope.row[item.prop] == '待付款' ? 'danger' : 'success'" style="font-size: 16px;">{{ scope.row[item.prop] }}</el-tag>
+										</template>								
+										<template v-else-if="item.prop == 'pay_status' || item.prop == 'pay_status'">
+											<el-tag :type="scope.row[item.prop] == '未支付' ? 'danger' : 'success'" style="font-size: 16px;">{{ scope.row[item.prop] }}</el-tag>
+										</template>
+
+										<template v-else-if="currentMenuIndex == 3">
+											
+											<template v-if="item.prop == 'avatar'">
+												<el-image style="width: 100px; height: 100px" :src="scope.row[item.prop]" />
+											</template>											
+											<template v-else-if="item.prop == 'status'">
+												<el-tag :type="scope.row[item.prop] === false ? 'danger' : 'success'" style="font-size: 16px;">{{ scope.row[item.prop] === true ? '正常':'封禁' }}</el-tag>
+											</template>
+											<template v-else>{{ scope.row[item.prop] }}</template>
+											
+										</template>
+
+										<template v-else>{{ scope.row[item.prop] }}</template>
+									</template>
+
+								</template>
+							</el-table-column>
 							<el-table-column
 								fixed="right"
 								label="操作"
@@ -60,26 +85,30 @@
 									<el-button
 										v-show="currentMenuIndex == 1"
 										type="danger"
-										size="small"
-										plain
+										link
 										@click="deleteGoods(scope.row)"
 										>删除</el-button
 									>
 									<el-button
 										v-show="currentMenuIndex == 2"
 										type="danger"
-										size="small"
-										plain
-										@click="deleteOrder(item)"
+										link
+										@click="deleteOrder(scope.row)"
 										>删除</el-button
 									>
 									<el-button
-										v-show="currentMenuIndex == 3"
+										v-show="currentMenuIndex == 3 && scope.row.status === true"
 										type="danger"
-										size="small"
-										plain
-										@click="banUser(item)"
+										link
+										@click="setUserStatus(scope.row)"
 										>封号</el-button
+									>
+									<el-button
+										v-show="currentMenuIndex == 3 && scope.row.status === false"
+										type="danger"
+										link
+										@click="setUserStatus(scope.row)"
+										>解封</el-button
 									>
 								</template>
 							</el-table-column>
@@ -94,8 +123,10 @@
 						>
 						</el-pagination>
 					</el-card>
+			<!-- <el-row class="table-container">
+				<el-col :span="12">
 				</el-col>
-			</el-row>
+			</el-row> -->
 		</div>
 	</div>
 </template>
@@ -120,9 +151,15 @@ const tableColumn = reactive({
 		url: "/admin/getAllGoods",
 		columnList: [
 			{
+				prop: "_id",
+				label: "闲置编号",
+				width: "260",
+				align: "",
+			},
+			{
 				prop: "publish_time",
 				label: "发布日期",
-				width: "180",
+				width: "240",
 				align: "",
 			},
 			{
@@ -145,22 +182,46 @@ const tableColumn = reactive({
 		],
 	},
 	2: {
-		url: "/admin/getAllGoods",
+		url: "/admin/getAllOrder",
 		columnList: [
 			{
-				prop: "publish_time",
-				label: "发布日期",
+				prop: "_id",
+				label: "订单编号",
+				width: "260",
+				align: "",
+			},
+			{
+				prop: "goods_title",
+				label: "闲置名称",
+				// width: "180",
+				align: "",
+			},
+			{
+				prop: "create_time",
+				label: "创建时间",
+				width: "240",
+				align: "",
+			},
+			{
+				prop: "goods_cover",
+				label: "闲置图片",
 				width: "180",
 				align: "",
 			},
 			{
-				prop: "publish_user",
-				label: "发布用户",
-				width: "180",
+				prop: "order_status",
+				label: "订单状态",
+				width: "100",
 				align: "",
 			},
 			{
-				prop: "price",
+				prop: "pay_status",
+				label: "支付状态",
+				width: "100",
+				align: "",
+			},
+			{
+				prop: "goods_price",
 				label: "价格",
 				width: "80",
 				align: "",
@@ -168,24 +229,30 @@ const tableColumn = reactive({
 		],
 	},
 	3: {
-		url: "/admin/getAllGoods",
+		url: "/admin/getAllUser",
 		columnList: [
 			{
-				prop: "publish_time",
-				label: "发布日期",
+				prop: "_id",
+				label: "用户ID",
+				width: "260",
+				align: "",
+			},
+			{
+				prop: "nickname",
+				label: "用户名",
 				width: "180",
 				align: "",
 			},
 			{
-				prop: "publish_user",
-				label: "发布用户",
-				width: "180",
+				prop: "avatar",
+				label: "头像",
+				width: "240",
 				align: "",
 			},
 			{
-				prop: "price",
-				label: "价格",
-				width: "80",
+				prop: "status",
+				label: "用户状态",
+				width: "120",
 				align: "",
 			},
 		],
@@ -198,7 +265,7 @@ const deleteBanUserLoading = ref(false);
 
 const paginationData = reactive({
 	pageNum: 1,
-	pageSize: 10,
+	pageSize: 20,
 	total: 0,
 });
 
@@ -290,12 +357,115 @@ const deleteGoods = (row) => {
 		.catch(() => {});
 };
 
-const deleteOrder = () => {
-	console.log("deleteOrder");
+const deleteOrder = (row) => {
+	ElMessageBox.confirm("确认删除该订单?", {
+		confirmButtonText: "确认",
+		cancelButtonText: "取消",
+		type: "warning",
+		beforeClose: (action, instance, done) => {
+			if (action === "confirm") {
+				instance.confirmButtonLoading = true;
+				instance.confirmButtonText = "删除中...";
+				setTimeout(() => {
+					instance.confirmButtonLoading = false;
+					instance.confirmButtonText = "确认";
+					done();
+				}, 300);
+			} else {
+				done();
+			}
+		},
+	})
+		.then(() => {
+			// deleteGoodsLoading.value = true;
+			request({
+				url: "/admin/deleteOrder",
+				method: "post",
+				data: {
+					_id: row._id,
+				},
+			})
+				.then((res) => {
+					if (res.code == 200) {
+						getTableData()
+						ElMessage({
+							type: "success",
+							message: "删除成功！",
+						});
+					} else {
+						ElMessage({
+							type: "error",
+							message: "删除失败！",
+						});
+					}
+				})
+				.catch((err) => {
+					ElMessage({
+						type: "error",
+						message: err,
+					});
+				})
+				.finally(() => {
+					// deleteGoodsLoading.value = false;
+				});
+		})
+		.catch(() => {});
 };
 
-const banUser = () => {
-	console.log("banUser");
+const setUserStatus = (row) => {
+	ElMessageBox.confirm("确认对该用户进行封号处理?", {
+		confirmButtonText: "确认",
+		cancelButtonText: "取消",
+		type: "warning",
+		beforeClose: (action, instance, done) => {
+			if (action === "confirm") {
+				instance.confirmButtonLoading = true;
+				instance.confirmButtonText = "封号中...";
+				setTimeout(() => {
+					instance.confirmButtonLoading = false;
+					instance.confirmButtonText = "确认";
+					done();
+				}, 300);
+			} else {
+				done();
+			}
+		},
+	})
+		.then(() => {
+			// deleteGoodsLoading.value = true;
+			request({
+				url: "/admin/setUserStatus",
+				method: "post",
+				data: {
+					_id: row._id,
+					status:row.status
+				},
+			})
+				.then((res) => {
+					if (res.code == 200) {
+						getTableData()
+						ElMessage({
+							type: "success",
+							message: "操作成功！",
+						});
+					} else {
+						ElMessage({
+							type: "error",
+							message: "操作失败！",
+						});
+					}
+				})
+				.catch((err) => {
+					ElMessage({
+						type: "error",
+						message: err,
+					});
+				})
+				.finally(() => {
+					// deleteGoodsLoading.value = false;
+				});
+		})
+		.catch(() => {});
 };
 
 const handleSelectMenu = (key, keyPath) => {
@@ -364,6 +534,12 @@ const handleLogOut = () => {
 		}
 		.table-container {
 			padding: 40px;
+			margin: 0 auto;
+			margin-top: 50px;
+			width: 1400px;
+			.el-table{
+				font-size: 16px;
+			}
 		}
 		.el-pagination {
 			justify-content: center;

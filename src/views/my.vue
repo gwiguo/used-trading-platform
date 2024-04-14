@@ -304,12 +304,15 @@ const handleLogOut = () => {
 	.left-container {
 		display: flex;
 		align-items: center;
-	}
-	.nickname {
-		margin-bottom: 20px;
-	}
-	.edit-address {
-		margin-right: 50px;
+		.info{
+			margin-left: 20px;
+			.nickname {
+				margin-bottom: 20px;
+			}
+		}	
+		.edit-address {
+			margin-right: 50px;
+		}
 	}
 }
 .block {
