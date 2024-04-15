@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
 					nickname: account,
 					status: true,
 					avatar: "/uploads/default.png",
+					address:[]
 				});
 			if (insertResult.insertedId) {
                 const user_data =  await db.collection("user").findOne({_id:insertResult.insertedId})

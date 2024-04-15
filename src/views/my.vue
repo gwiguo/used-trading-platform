@@ -7,7 +7,7 @@
 				<el-button type="primary" plain @click="dialogVisible=true">编辑资料</el-button>
 			</div>
 		</div>
-		<el-button type="primary" plain class="edit-address">编辑收货地址</el-button>
+		<el-button type="primary" plain class="edit-address" @click="addressDialogVisible=true">编辑收货地址</el-button>
 	</div>
 	<div class="block"></div>
 	<div class="content">
@@ -138,13 +138,63 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <div class="dialog-footer">
+      <div class="dialog-footer" style="text-align: right;">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleClickSaveInfo" :loading="updateUserInfoLoading">
           确定
         </el-button>
       </div>
     </template>
+  </el-dialog>
+  <el-dialog
+		v-model="addressDialogVisible"
+		title="编辑地址"
+		width="40%"
+		align-center		
+	>
+	<el-form ref="addressFormRef" :model="addressForm" :rules="addressRules" label-width="120"> 
+		<el-form-item label="收货人姓名" prop="name">
+			<el-input v-model="addressForm.name" size="large" placeholder="请输入收货人姓名"></el-input>
+		</el-form-item>
+		<el-form-item label="手机号码" prop="mobile">
+			<el-input v-model="addressForm.mobile" size="large" type="text" show-word-limit maxlength="11" placeholder="请输入手机号码"></el-input>
+		</el-form-item>
+		<el-form-item label="省/市" prop="city">			
+			<el-cascader
+				style="width: 100%"
+				v-model="addressForm.city"
+				:options="cityData"
+				@change="handleChangeCity"
+				size="large"
+				placeholder="请选择"
+				popper-class="city-popper"
+				ref="cityCascader"
+			/>
+		</el-form-item>
+		<el-form-item label="详细地址" prop="detail_address">
+			<el-input v-model="addressForm.detail_address" size="large" placeholder="请输入详细地址"></el-input>
+		</el-form-item>
+	</el-form>
+	<el-row>
+		<el-col style="text-align: center;">
+			<el-button @click="handleClickSaveAddress(addressFormRef)">保存地址</el-button>
+		</el-col>
+	</el-row>
+	<el-tabs>
+		<el-tab-pane label="已有收货地址">
+			<el-table :data="existingAddressData">
+				<el-table-column prop="name" label="收货人姓名" />
+				<el-table-column prop="mobile" label="收货人手机号" />
+				<el-table-column prop="address" label="收货人地址" />
+			</el-table>
+		</el-tab-pane>
+	</el-tabs>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="addressDialogVisible = false">取消</el-button>
+      </div>
+    </template>
+	
   </el-dialog>
 </template>
 <script setup>
@@ -161,9 +211,35 @@ const { userInfo, personal } = storeToRefs(useStore);
 const { proxy } = getCurrentInstance();
 const activeName = ref("bought");
 console.log(userInfo);
+const cityData = ref([])
+const cityCascader = ref(null);
+const addressFormRef = ref(null)
+
 onMounted(async () => {
 	await getMyGoods();
+	getExistingAddressData();
+	request("/getCity").then(res => {
+		cityData.value = res.data;
+	});
 });
+
+const handleChangeCity = city => {
+	// addressForm.city = cityCascader.value.getCheckedNodes()[0].pathLabels[0] + cityCascader.value.getCheckedNodes()[0].pathLabels[1]
+};
+
+const existingAddressData = ref([])
+const getExistingAddressData = () => {
+	request({
+		url:"/user/getAddress",
+		method:"get",
+		params:{
+			_id:userInfo.value._id
+		}
+	}).then(res => {
+		existingAddressData.value = res.list[0].address;
+		console.log(existingAddressData.value);
+	});
+}
 
 
 // const filter = data => {
@@ -179,6 +255,8 @@ const router = useRouter();
 let pageLoading = ref();
 const updateUserInfoLoading =ref(false)
 const dialogVisible = ref(false)
+const addressDialogVisible = ref(true)
+const saveAddressLoading = ref(false)
 const data = reactive({
 	bought: [],
 	published: [],
@@ -191,6 +269,44 @@ const editInfoform = reactive({
 	nickname:userInfo.value.nickname,
 	password:userInfo.value.password,
 	avatar:userInfo.value.avatar
+})
+
+const addressForm = reactive({
+	name:"",
+	mobile:"",
+	city:"",
+	detail_address:""
+})
+
+const addressRules = reactive({
+	name:[
+		{
+			required:true,
+			message: '请输入收货人名字',
+			trigger: 'blur' 
+		}
+	],
+	mobile:[
+		{
+			required:true,
+			message: '请输入手机号',
+			trigger: 'blur' 
+		}
+	],
+	city:[
+		{
+			required:true,
+			message: '请选择城市',
+			trigger: 'blur' 
+		}
+	],
+	detail_address:[
+		{
+			required:true,
+			message: '请输入详细地址',
+			trigger: 'blur' 
+		}
+	]
 })
 
 const getMyGoods = () => {
@@ -290,6 +406,33 @@ const handleLogOut = () => {
 	editInfoform.avatar = response.file;
 	ElNotification({ type: "success", message: "图片上传成功！" });
 };
+
+const handleClickSaveAddress = async (formEl) => {
+	if (!formEl) return
+	await formEl.validate((valid, fields) => {
+		if (valid) {
+			addressForm.address = cityCascader.value.getCheckedNodes()[0].pathLabels[0] + cityCascader.value.getCheckedNodes()[0].pathLabels[1] + addressForm.detail_address;
+
+			delete addressForm.city;
+			delete addressForm.detail_address;
+			request({
+				url:"/user/addAddress",
+				method:"post",
+				data:{
+					_id:userInfo.value._id,
+					payload:addressForm
+				}
+			}).then(res=>{
+				console.log(res);
+				if(res.code == 200){
+
+				}
+			})
+		} else {
+			console.log('error submit!', fields)
+		}
+	})
+}
 
 </script>
 
