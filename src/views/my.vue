@@ -151,6 +151,7 @@
 		title="编辑地址"
 		width="40%"
 		align-center		
+		@close="closeAddressDialog(addressFormRef)"
 	>
 	<el-form ref="addressFormRef" :model="addressForm" :rules="addressRules" label-width="120"> 
 		<el-form-item label="收货人姓名" prop="name">
@@ -177,12 +178,12 @@
 	</el-form>
 	<el-row>
 		<el-col style="text-align: center;">
-			<el-button @click="handleClickSaveAddress(addressFormRef)">保存地址</el-button>
+			<el-button @click="handleClickSaveAddress(addressFormRef)" :loading="saveAddressLoading">保存地址</el-button>
 		</el-col>
 	</el-row>
 	<el-tabs>
 		<el-tab-pane label="已有收货地址">
-			<el-table :data="existingAddressData">
+			<el-table :data="existingAddressData" v-loading="addressTableLoading">
 				<el-table-column prop="name" label="收货人姓名" />
 				<el-table-column prop="mobile" label="收货人手机号" />
 				<el-table-column prop="address" label="收货人地址" />
@@ -229,6 +230,7 @@ const handleChangeCity = city => {
 
 const existingAddressData = ref([])
 const getExistingAddressData = () => {
+	addressTableLoading.value = true;
 	request({
 		url:"/user/getAddress",
 		method:"get",
@@ -238,7 +240,9 @@ const getExistingAddressData = () => {
 	}).then(res => {
 		existingAddressData.value = res.list[0].address;
 		console.log(existingAddressData.value);
-	});
+	}).finally(()=>{		
+		addressTableLoading.value = false;
+	})
 }
 
 
@@ -255,8 +259,9 @@ const router = useRouter();
 let pageLoading = ref();
 const updateUserInfoLoading =ref(false)
 const dialogVisible = ref(false)
-const addressDialogVisible = ref(true)
+const addressDialogVisible = ref(false)
 const saveAddressLoading = ref(false)
+const addressTableLoading = ref(false)
 const data = reactive({
 	bought: [],
 	published: [],
@@ -411,6 +416,7 @@ const handleClickSaveAddress = async (formEl) => {
 	if (!formEl) return
 	await formEl.validate((valid, fields) => {
 		if (valid) {
+			saveAddressLoading.value = true;
 			addressForm.address = cityCascader.value.getCheckedNodes()[0].pathLabels[0] + cityCascader.value.getCheckedNodes()[0].pathLabels[1] + addressForm.detail_address;
 
 			delete addressForm.city;
@@ -425,13 +431,29 @@ const handleClickSaveAddress = async (formEl) => {
 			}).then(res=>{
 				console.log(res);
 				if(res.code == 200){
-
+					ElMessage({
+						type: "success",
+						message: "地址保存成功~",
+					});		
+					getExistingAddressData();
+				}else{
+					ElMessage({
+						type: "error",
+						message: "地址保存失败~",
+					});	
 				}
+			}).finally(()=>{
+				saveAddressLoading.value = false;
 			})
 		} else {
 			console.log('error submit!', fields)
 		}
 	})
+}
+
+const closeAddressDialog = (formEl) => {
+	console.log(1);
+	formEl.resetFields()
 }
 
 </script>

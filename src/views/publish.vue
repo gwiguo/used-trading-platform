@@ -177,6 +177,7 @@ const handleClickPublish = ruleFormRef => {
 			postPayload.publish_time = formaDate(new Date());
 			postPayload.user_avatar = useStore.userInfo.avatar;
 			postPayload.publish_user = useStore.userInfo.nickname;
+			postPayload.publish_user_id = useStore.userInfo._id;
 			request({
 				url: "/goods/publishGoods",
 				method: "POST",

@@ -275,7 +275,10 @@ const sendCmt = () => {
 			goods_id: data.value._id,
 			content: cmtContent.value,
 			avatar: userInfo.value.avatar,
+			comment_user_id:userInfo.value._id,
+			reply_user_id:data.value.publish_user_id,
 			nickname: userInfo.value.nickname,
+			goods_cover: data.value.images[0],
 			time: formaDate(new Date())
 		}
 	})

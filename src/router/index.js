@@ -42,8 +42,17 @@ const routes = [
                 },
                 component: () => import(/* webpackChunkName: "login" */ '../views/my.vue'),
             },
+            {
+                path: '/message',
+                name: 'message',
+                meta: {
+                    requiresAuth:true
+                },
+                component: () => import(/* webpackChunkName: "login" */ '../views/message.vue'),
+            },
         ]
     },
+    
     {
         path: '/cms',
         name: 'cms',

@@ -19,8 +19,7 @@
 				@click="toPublishPage"
 				>发布闲置</el-button
 			>
-			<el-button class="message-btn" type="primary" :icon="ChatDotSquare"
-				>消息</el-button
+			<el-button class="message-btn" type="primary" :icon="ChatDotSquare" @click="$router.push('/message')">消息</el-button
 			>
 			<div class="user-wrap" v-if="userInfo.nickname">
 				<el-dropdown popper-class="user-dropdown">
