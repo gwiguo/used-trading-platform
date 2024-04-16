@@ -155,6 +155,7 @@ const handleClickWantToBy = () => {
 			url: "/order_api/createOrder",
 			method: "post",
 			data: {
+				of_user_id:data.value.publish_user_id,
 				user_id: userInfo.value._id,
 				goods_id: route.params.id,
 				goods_title: data.value.title,

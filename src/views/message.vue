@@ -32,6 +32,7 @@
 </template>
 
 <script setup>
+import { Loading } from "@element-plus/icons-vue";
 import { onMounted, ref, getCurrentInstance, reactive } from "vue";
 import request from "@/utils/request.js";
 import { storeToRefs } from "pinia";

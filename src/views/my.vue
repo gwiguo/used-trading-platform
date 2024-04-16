@@ -238,7 +238,7 @@ const getExistingAddressData = () => {
 			_id:userInfo.value._id
 		}
 	}).then(res => {
-		existingAddressData.value = res.list[0].address;
+		existingAddressData.value = res.list;
 		console.log(existingAddressData.value);
 	}).finally(()=>{		
 		addressTableLoading.value = false;
@@ -323,19 +323,20 @@ const getMyGoods = () => {
 	});
 	return new Promise((resolve, reject) => {
 		request({
-			url: "/personal/getMyGoods",
+			url: "/personal/getPersonal",
 			params: {
-				_id: route.params.id,
 				user_id: userInfo.value._id
 			}
 		})
 			.then(res => {
 				if (res.code == 200) {
-					data.bought = res.data.filter(item => item.category == "bought");
-					data.published = res.data.filter(item => item.category == "published");
-					data.removed = res.data.filter(item => item.category == "removed");
-					data.sold = res.data.filter(item => item.category == "sold");
-					data.collected = res.data.filter(item => item.category == "collected");
+					console.log(res);
+					data.bought = res.data.bought;
+					data.published = res.data.published;
+					data.removed = res.data.removed;
+					data.sold = res.data.sold;
+					data.collected = res.data.collected;
+					console.log(data);
 				}
 			})
 			.finally(() => {
@@ -452,7 +453,6 @@ const handleClickSaveAddress = async (formEl) => {
 }
 
 const closeAddressDialog = (formEl) => {
-	console.log(1);
 	formEl.resetFields()
 }
 

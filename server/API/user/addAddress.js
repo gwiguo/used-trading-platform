@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             const result = await db.collection("user").find({ _id:new ObjectId(_id) }).project({ address: 1 }).toArray()
 
             console.log(result);
-            let address = result[0].address || []
+            let address = Array.isArray(result[0].address) ? result[0].address : [];
             console.log(address);
 
             address.push(payload)

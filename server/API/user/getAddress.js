@@ -7,10 +7,12 @@ module.exports = async (req, res) => {
     __connectDB((db, client) => {
         db.collection("user").find({_id:new ObjectId(_id)}).project({address:1,_id:false}).toArray()
             .then((data) => {
+                // console.log(Array.isArray(data.address));
+                // console.log(data.address.length);
                 console.log(data);
                 res.send({
                     code: 200,
-                    list: data,
+                    list: data[0].address,
                     count: data.length
                 });
             }).catch(err => {

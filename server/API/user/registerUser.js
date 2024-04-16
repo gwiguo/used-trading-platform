@@ -32,6 +32,15 @@ module.exports = async (req, res) => {
                         code: 200,
                         data:user_data
                     });
+					const personResult =  await db.collection("personal").insertOne({
+						user_id:insertResult.insertedId,
+						collected:[],
+						published:[],
+						removed:[],
+						sold:[],
+						bought:[],
+					})
+					console.log(personResult);
                 }else{
                     res.send({
                         code: -1

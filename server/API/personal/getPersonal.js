@@ -1,9 +1,10 @@
 const { __connectDB } = require("../../db/mongo.js");
+const { ObjectId } = require("mongodb")
 
 module.exports = async (req, res) => {
     const { user_id } = req.query;
     const where = {
-        user_id
+        user_id:new ObjectId(user_id)
     };
 
     __connectDB((db, client) => {

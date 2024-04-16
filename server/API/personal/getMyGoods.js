@@ -6,30 +6,11 @@ module.exports = async (req, res) => {
 
     __connectDB(async (db, client) => {
         try {
-            // console.log("category：",category);
-            // console.log(user_id);
-            // const result = await db.collection("personal").find({ user_id }).toArray()
-
-            // console.log("result：",result);
-            
-            // const goodsIdList = result[0][category] || []
-    
-            // const idList = []
-            // for (let i = 0; i < goodsIdList.length; i++) {
-            //     idList.push({goods_id:goodsIdList[i]})            
-            // }
-    
-            // console.log("idList：",idList);
-
-            // console.log("where：",{ 
-            //     user_id,
-            //     category,
-            //     $or:idList
-            // });
-    
             const data = await db.collection("order").find({ 
                 user_id
             }).toArray()
+
+            console.log(data);
     
     
             res.send({
