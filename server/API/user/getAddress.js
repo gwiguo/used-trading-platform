@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
             .then((data) => {
                 // console.log(Array.isArray(data.address));
                 // console.log(data.address.length);
-                console.log(data);
+                // console.log(data);
                 res.send({
                     code: 200,
                     list: data[0].address,

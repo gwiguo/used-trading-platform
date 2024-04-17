@@ -6,9 +6,11 @@ module.exports = async (req, res) => {
 
     __connectDB(async (db, client) => {
         try {
-            const result = await db.collection("personal").find({ user_id:new ObjectId(user_id) }).project({ collected: 1 }).toArray()
-            console.log(result);
-            let collected = result.length && result[0].collected || [];
+            const result = await db.collection("personal").findOne({ user_id },{ collected: 1 })
+
+            // console.log(result);
+            
+            let collected = result && result.collected || [];
             console.log('-------------');
             console.log(collected);
             if (collected.includes(goods_id)) {
@@ -16,13 +18,20 @@ module.exports = async (req, res) => {
             } else {
                 collected.push(goods_id)
             }
-            await db.collection("personal").updateOne({ user_id: new ObjectId(user_id) }, {
+            console.log(collected);
+            await db.collection("personal").updateOne({ user_id }, {
                 $set: {
-                    collected: collected
+                    collected
                 }
             })
+
+            const newCollected = await db.collection("personal").findOne({user_id},{projection:{collected:1,_id:0}})
+
+            console.log(newCollected);
+
             res.send({
-                code: 200
+                code: 200,
+                data: newCollected && newCollected.collected || []
             })
         } catch (error) {
             console.log(error);

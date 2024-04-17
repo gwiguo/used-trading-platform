@@ -25,6 +25,7 @@ const updateUserInfo = require("./api/user/updateUserInfo.js");
 const addAddress = require("./api/user/addAddress.js");
 const getAddress = require("./api/user/getAddress.js");
 const getMyMessage = require("./api/personal/getMyMessage.js");
+const getCollect = require("./api/personal/getCollect.js");
 
 // 订单
 const getOrderInfo = require("./api/order/getOrderInfo.js");
@@ -43,12 +44,10 @@ const setUserStatus = require("./api/admin/setUserStatus.js");
 
 
 router.get("*", (req, res, next) => {
-    console.log();
-    console.log(`GET ${req.url}`);
+    !/^\/uploads\//.test(req.url) && console.log(`GET ${req.url}`);
     next()
 })
 router.post("*", (req, res, next) => {
-    console.log();
     console.log(`POST ${req.url}`);
     next()
 })
@@ -72,6 +71,8 @@ router.post("/updateUserInfo", updateUserInfo);
 router.post("/addAddress", addAddress);
 router.get("/getAddress", getAddress);
 router.get("/getMyMessage", getMyMessage);
+router.get("/getCollect", getCollect);
+
 
 // 后台系统接口
 router.get("/admin/getAllGoods", getAllGoods);
