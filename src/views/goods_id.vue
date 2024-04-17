@@ -9,9 +9,10 @@
 		</div>
 		<div class="right-container">
 			<div class="price">￥{{ data?.price }}</div>
-			<el-button type="danger" plain size="large" :icon="Goods"
+			<el-button v-if="userInfo._id!=data.publish_user_id" type="danger" plain size="large" :icon="Goods"
 				:loading="buyLoading" @click="handleClickWantToBy">我想要</el-button>
 			<el-button
+				v-if="userInfo._id!=data.publish_user_id"
 				type="primary"
 				plain
 				size="large"

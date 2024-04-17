@@ -5,7 +5,8 @@ module.exports = async (req, res) => {
 
     const where = {
         type: { $regex: type == '全部' ? '' : type },
-        title: { $regex: title || "" }
+        title: { $regex: title || "" },
+        status:1 // 1正常 -1下架 0 已卖出
     };
 
     __connectDB((db, client) => {

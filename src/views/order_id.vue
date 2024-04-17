@@ -15,10 +15,10 @@
 	<div class="block"></div>
 	<div class="order-container">
 		<div class="order-title">订单信息（{{ data.order_status }}）：</div>
-		<div class="order-id">编号：{{ data._id }}</div>
+		<div class="order-id">订单编号：{{ data._id }}</div>
 		<div class="pay-status">
 			支付状态：
-			<el-tag class="ml-2" :type="data.pay_status == '未支付' ? 'danger' : 'success'">{{
+			<el-tag class="ml-2" size="large" :type="data.pay_status == '未支付' ? 'danger' : 'success'">{{
 				data.pay_status
 			}}</el-tag>
 		</div>
@@ -124,11 +124,19 @@ const handleClickPay = () => {
 };
 
 const pay = () => {
+	// pageLoading = proxy.$loading({
+	// 	target: ".main",
+	// 	text: "Loading...",
+	// 	spinner:
+	// 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" data-v-ea893728=""><path fill="#409eff" d="M512 64a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V96a32 32 0 0 1 32-32m0 640a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V736a32 32 0 0 1 32-32m448-192a32 32 0 0 1-32 32H736a32 32 0 1 1 0-64h192a32 32 0 0 1 32 32m-640 0a32 32 0 0 1-32 32H96a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32M195.2 195.2a32 32 0 0 1 45.248 0L376.32 331.008a32 32 0 0 1-45.248 45.248L195.2 240.448a32 32 0 0 1 0-45.248zm452.544 452.544a32 32 0 0 1 45.248 0L828.8 783.552a32 32 0 0 1-45.248 45.248L647.744 692.992a32 32 0 0 1 0-45.248zM828.8 195.264a32 32 0 0 1 0 45.184L692.992 376.32a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0m-452.544 452.48a32 32 0 0 1 0 45.248L240.448 828.8a32 32 0 0 1-45.248-45.248l135.808-135.808a32 32 0 0 1 45.248 0z"></path></svg>'
+	// });
 	request({
 		url: "/order_api/payOrder",
 		method: "post",
 		data: {
 			_id: route.params.id,
+			of_user_id:data.value.of_user_id,
+			goods_id:data.value.goods_id,
 			pay_status: "已支付",
 			pay_way: "支付宝",
 			order_status: "待发货",
@@ -137,19 +145,23 @@ const pay = () => {
 	})
 		.then(res => {
 			if (res.code == 200) {
+				pageLoading.close();
 				ElMessage({
 					type: "success",
 					message: "支付成功！"
 				});
 				getOrderInfo();
 			} else {
+				pageLoading.close();
 				ElMessage({
 					type: "error",
 					message: "支付失败~"
 				});
 			}
 		})
-		.finally(() => {});
+		.finally(() => {
+			pageLoading.close();
+		});
 };
 </script>
 

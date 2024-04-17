@@ -92,7 +92,7 @@
 				</el-form-item>
 			</el-form>
 			<el-row style="justify-content: center; margin-top: 50px">
-				<el-button type="primary" plain size="large" @click="handleClickPublish(ruleFormRef)"
+				<el-button type="primary" :loading="btnLoading" plain size="large" @click="handleClickPublish(ruleFormRef)"
 					>发布闲置</el-button
 				>
 			</el-row>
@@ -121,6 +121,7 @@ const payload = reactive({
 	price: "",
 	images: []
 });
+const btnLoading = ref(false)
 const ruleFormRef = ref(null);
 const cityCascader = ref(null);
 const cityData = ref([]);
@@ -172,12 +173,14 @@ const handleRemove = file => {
 const handleClickPublish = ruleFormRef => {
 	ruleFormRef.validate(valid => {
 		if (valid) {
+			btnLoading.value = true;
 			const postPayload = JSON.parse(JSON.stringify(payload));
 			postPayload.images = payload.images.map(item => item.url);
 			postPayload.publish_time = formaDate(new Date());
 			postPayload.user_avatar = useStore.userInfo.avatar;
 			postPayload.publish_user = useStore.userInfo.nickname;
 			postPayload.publish_user_id = useStore.userInfo._id;
+			postPayload.status = 1 ;  // 1正常 -1下架 0 已卖出
 			request({
 				url: "/goods/publishGoods",
 				method: "POST",
@@ -189,7 +192,9 @@ const handleClickPublish = ruleFormRef => {
 				} else {
 					ElNotification({ type: "error", message: "闲置发布失败~请查看接口日志" });
 				}
-			});
+			}).finally(()=>{
+				btnLoading.value = false;
+			})
 		}
 	});
 };

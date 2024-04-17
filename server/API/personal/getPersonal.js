@@ -5,8 +5,9 @@ module.exports = async (req, res) => {
     const { user_id } = req.query;
 
     __connectDB(async (db, client) => {
-        const findResult = await db.collection("personal").findOne({ user_id })
-        console.log(`findResult：${findResult}`);
+        const findResult = await db.collection("personal").findOne({ user_id : new ObjectId(user_id) })
+        console.log('-------findResult：-------');
+        console.log(findResult);
 
         
         if(findResult){
@@ -139,26 +140,39 @@ module.exports = async (req, res) => {
 
             // 我卖出的
             if(findResult.sold.length){
-                const sold = await db.collection("order").find({ 
+                const sold = await db.collection("goods").find({ 
                     _id:{
                         $in:findResult.sold
                     }
                  },{
                     sort:{
-                        create_time: -1
+                        publish_time: -1
                     },
                     projection:{
-                        goods_cover:1,
-                        goods_title:1,
-                        goods_desc:1,
-                        create_time:1,
-                        goods_price:1
+                        images:1,
+                        title:1,
+                        desc:1,
+                        publish_time:1,
+                        price:1,
+                        status:1
                     }
                 })
                 data.sold = [];
                 for await (const doc of sold) {
                     data.sold.push(doc);
                 }
+                data.sold.forEach(item=>{
+                    item.goods_cover = item.images[0]
+                    item.goods_title = item.title;
+                    item.goods_desc = item.desc;
+                    item.create_time = item.publish_time;
+                    item.goods_price = item.price;
+                    delete item.images
+                    delete item.title
+                    delete item.desc
+                    delete item.publish_time
+                    delete item.price
+                })
             }
 
             res.send({

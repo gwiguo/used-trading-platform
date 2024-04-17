@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     __connectDB(async (db, client) => {
         try {
             const data = await db.collection("personal").findOne({ 
-                user_id
+                user_id:new ObjectId(user_id)
             },{projection:{collected:1,_id:0}})
 
             console.log(data);    

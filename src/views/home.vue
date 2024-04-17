@@ -43,6 +43,7 @@
 			</div>
 			<el-empty v-else-if="!loading && !dataList.length" image="/src/assets/images/empty.png" description=" " />
 			<el-pagination
+				v-if="dataList.length"
 				background
 				layout="prev, pager, next, jumper"
 				:total="total"

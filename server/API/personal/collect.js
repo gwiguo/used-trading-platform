@@ -6,9 +6,12 @@ module.exports = async (req, res) => {
 
     __connectDB(async (db, client) => {
         try {
-            const result = await db.collection("personal").findOne({ user_id },{ collected: 1 })
+            console.log('----user_id-----');
+            console.log(user_id)
+            const result = await db.collection("personal").findOne({ user_id : new ObjectId(user_id)},{ collected: 1 })
 
-            // console.log(result);
+            console.log('-------result------')
+            console.log(result);
             
             let collected = result && result.collected || [];
             console.log('-------------');
@@ -16,16 +19,16 @@ module.exports = async (req, res) => {
             if (collected.includes(goods_id)) {
                 collected = collected.filter(item => item != goods_id)
             } else {
-                collected.push(goods_id)
+                collected.push(new ObjectId(goods_id))
             }
             console.log(collected);
-            await db.collection("personal").updateOne({ user_id }, {
+            await db.collection("personal").updateOne({ user_id : new ObjectId(user_id)}, {
                 $set: {
                     collected
                 }
             })
 
-            const newCollected = await db.collection("personal").findOne({user_id},{projection:{collected:1,_id:0}})
+            const newCollected = await db.collection("personal").findOne({user_id:new ObjectId(user_id)},{projection:{collected:1,_id:0}})
 
             console.log(newCollected);
 

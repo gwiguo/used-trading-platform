@@ -13,7 +13,15 @@ module.exports = async (req, res) => {
                     avatar
                 }
             })
-            if(updateResult.modifiedCount !== 0){                
+            if(updateResult.modifiedCount !== 0){     
+                const updateGoodsPublishUser = await db.collection("goods").updateMany({publish_user_id: _id},{
+                    $set:{
+                        publish_user:nickname,
+                        user_avatar:avatar
+                    }
+                })           
+                console.log('-------updateGoodsPublishUser------');
+                console.log(updateGoodsPublishUser);
                 res.send({
                     code: 200,
                     msg:"信息修改成功~"
